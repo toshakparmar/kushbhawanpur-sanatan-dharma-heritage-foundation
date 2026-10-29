@@ -43,13 +43,14 @@ export function Work({ onSelectCause }: WorkProps) {
               <TiltedCard key={area.id} maxTilt={6}>
                 <div className="h-full rounded-2xl overflow-hidden border border-border bg-paper shadow-sm hover:shadow-xl hover:border-gold/50 transition-all duration-300 flex flex-col justify-between">
                   {/* Photo with Badge */}
-                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-sand/30" style={{ position: "relative" }}>
+                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-sand/30">
                     <Image
                       src={area.image}
                       alt={area.title}
-                      fill
+                      width={600}
+                      height={375}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-700 hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent" />
                     

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface BlurTextProps {
@@ -19,13 +19,7 @@ export function BlurText({
   animateBy = "words",
   direction = "bottom",
 }: BlurTextProps) {
-  const shouldReduceMotion = useReducedMotion();
   const elements = animateBy === "words" ? text.split(" ") : Array.from(text);
-
-  if (shouldReduceMotion) {
-    return <span className={className}>{text}</span>;
-  }
-
   const yOffset = direction === "top" ? -14 : 14;
 
   return (
@@ -33,7 +27,11 @@ export function BlurText({
       {elements.map((el, i) => (
         <motion.span
           key={i}
-          initial={{ opacity: 0, filter: "blur(8px)", y: yOffset }}
+          initial={{
+            opacity: 0,
+            filter: "blur(8px)",
+            y: yOffset,
+          }}
           whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
           viewport={{ once: true }}
           transition={{

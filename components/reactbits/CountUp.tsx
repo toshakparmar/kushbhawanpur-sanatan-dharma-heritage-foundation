@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { useInView, useReducedMotion } from "framer-motion";
+import { useInView } from "framer-motion";
 
 interface CountUpProps {
   to: number;
@@ -24,12 +24,12 @@ export function CountUp({
 }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10%" });
-  const shouldReduceMotion = useReducedMotion();
   const [value, setValue] = useState(from);
 
   useEffect(() => {
-    if (!inView || shouldReduceMotion) {
-      if (shouldReduceMotion) setValue(to);
+    const isReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!inView || isReduced) {
+      if (isReduced) setValue(to);
       return;
     }
 
@@ -54,7 +54,7 @@ export function CountUp({
     animationFrameId = requestAnimationFrame(step);
 
     return () => cancelAnimationFrame(animationFrameId);
-  }, [inView, from, to, duration, shouldReduceMotion]);
+  }, [inView, from, to, duration]);
 
   const formatted = new Intl.NumberFormat("en-IN", {
     useGrouping: Boolean(separator),

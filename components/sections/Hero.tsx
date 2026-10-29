@@ -157,14 +157,15 @@ export function Hero() {
                 style={{ x: layer2X, y: layer2Y }}
                 className="relative w-[280px] sm:w-[350px] h-[340px] sm:h-[420px] rounded-t-full rounded-b-3xl overflow-hidden border-2 border-gold/70 shadow-2xl bg-paper"
               >
-                <div className="relative w-full h-full overflow-hidden" style={{ position: "relative" }}>
+                <div className="relative w-full h-full overflow-hidden">
                   <Image
                     src="/images/hero-temple.webp"
                     alt="Ancient Hindu heritage temple at golden sunrise"
-                    fill
+                    width={400}
+                    height={500}
                     priority
                     sizes="(max-width: 768px) 300px, 400px"
-                    className="object-cover scale-105 animate-[pulse_14s_ease-in-out_infinite_alternate]"
+                    className="w-full h-full object-cover scale-105 animate-[pulse_14s_ease-in-out_infinite_alternate]"
                   />
                   {/* Subtle warm overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-maroon/60 via-transparent to-saffron/10 mix-blend-multiply" />

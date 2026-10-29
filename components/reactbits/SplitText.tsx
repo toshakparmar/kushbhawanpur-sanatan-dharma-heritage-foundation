@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface SplitTextProps {
@@ -17,12 +17,7 @@ export function SplitText({
   delay = 0.04,
   wordSpacing = "mr-[0.25em]",
 }: SplitTextProps) {
-  const shouldReduceMotion = useReducedMotion();
   const words = text.split(" ");
-
-  if (shouldReduceMotion) {
-    return <span className={className}>{text}</span>;
-  }
 
   const container = {
     hidden: { opacity: 0 },

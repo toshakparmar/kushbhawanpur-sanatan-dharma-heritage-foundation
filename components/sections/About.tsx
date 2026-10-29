@@ -50,25 +50,27 @@ export function About() {
           
           {/* Photos Layering */}
           <div className="lg:col-span-6 relative">
-            <div className="relative rounded-3xl overflow-hidden border border-border shadow-xl aspect-[4/3] bg-paper" style={{ position: "relative" }}>
+            <div className="relative rounded-3xl overflow-hidden border border-border shadow-xl aspect-[4/3] bg-paper">
               <Image
                 src="/images/about-arches.webp"
                 alt="Intricate ancient Indian temple courtyard arches and carved pillars"
-                fill
+                width={800}
+                height={600}
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover"
+                className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-transparent" />
             </div>
 
             {/* Overlapping Secondary Image */}
-            <div className="hidden sm:block absolute -bottom-8 -right-6 w-56 h-40 rounded-2xl overflow-hidden border-2 border-cream shadow-2xl bg-paper" style={{ position: "relative" }}>
+            <div className="hidden sm:block absolute -bottom-8 -right-6 w-56 h-40 rounded-2xl overflow-hidden border-2 border-cream shadow-2xl bg-paper">
               <Image
                 src="/images/gallery-aarti.webp"
                 alt="Floating diyas on holy ghat water"
-                fill
+                width={240}
+                height={160}
                 sizes="240px"
-                className="object-cover"
+                className="w-full h-full object-cover"
               />
             </div>
 

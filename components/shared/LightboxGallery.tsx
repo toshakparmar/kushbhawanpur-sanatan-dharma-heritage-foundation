@@ -39,13 +39,14 @@ export function LightboxGallery({ items }: LightboxGalleryProps) {
                 isLarge ? "sm:col-span-2 sm:row-span-2 lg:col-span-2 lg:row-span-2" : ""
               )}
             >
-              <div className="relative aspect-[4/3] w-full h-full overflow-hidden bg-sand/30" style={{ position: "relative" }}>
+              <div className="relative aspect-[4/3] w-full h-full overflow-hidden bg-sand/30">
                 <Image
                   src={item.image}
                   alt={item.title}
-                  fill
+                  width={600}
+                  height={450}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
 
                 {/* Subtle gradient overlay */}
@@ -87,12 +88,13 @@ export function LightboxGallery({ items }: LightboxGalleryProps) {
         <DialogContent className="max-w-4xl p-0 overflow-hidden bg-cream border border-gold/40">
           {activeItem && (
             <div className="flex flex-col">
-              <div className="relative aspect-[16/10] w-full bg-black/5" style={{ position: "relative" }}>
+              <div className="relative aspect-[16/10] w-full bg-black/5">
                 <Image
                   src={activeItem.image}
                   alt={activeItem.title}
-                  fill
-                  className="object-contain"
+                  width={1200}
+                  height={750}
+                  className="w-full h-full object-contain"
                 />
               </div>
               <div className="p-6 bg-paper border-t border-border flex flex-col space-y-2">

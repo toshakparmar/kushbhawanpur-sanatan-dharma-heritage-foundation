@@ -21,13 +21,13 @@ export function Marquee({
   return (
     <div
       className={cn(
-        "group flex overflow-hidden select-none [mask-image:linear-gradient(to_right,transparent,white_10%,white_90%,transparent)]",
+        "group flex w-full overflow-hidden select-none [mask-image:linear-gradient(to_right,transparent,white_6%,white_94%,transparent)]",
         className
       )}
     >
       <div
         className={cn(
-          "flex shrink-0 items-center gap-8 py-2",
+          "flex shrink-0 items-center gap-8 py-2 pr-8",
           direction === "left" ? "animate-marquee-left" : "animate-marquee-right",
           pauseOnHover && "group-hover:[animation-play-state:paused]"
         )}
@@ -37,7 +37,7 @@ export function Marquee({
       </div>
       <div
         className={cn(
-          "flex shrink-0 items-center gap-8 py-2",
+          "flex shrink-0 items-center gap-8 py-2 pr-8",
           direction === "left" ? "animate-marquee-left" : "animate-marquee-right",
           pauseOnHover && "group-hover:[animation-play-state:paused]"
         )}

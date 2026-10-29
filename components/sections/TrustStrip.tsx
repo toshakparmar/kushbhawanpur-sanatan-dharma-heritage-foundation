@@ -15,14 +15,16 @@ export function TrustStrip() {
     FileCheck: <FileCheck className="w-4 h-4 text-maroon" />,
   };
 
+  const marqueeItems = [...commitments, ...commitments];
+
   return (
-    <section className="bg-sand/70 border-y border-border py-4 overflow-hidden select-none">
-      <div className="max-w-7xl mx-auto px-4">
-        <Marquee speed={35} pauseOnHover={true}>
-          {commitments.map((item, index) => (
+    <section className="bg-sand/70 border-y border-border py-4 overflow-hidden select-none w-full">
+      <div className="w-full">
+        <Marquee speed={32} pauseOnHover={true}>
+          {marqueeItems.map((item, index) => (
             <div
               key={index}
-              className="inline-flex items-center gap-3 px-5 py-1.5 rounded-full bg-paper border border-border shadow-xs shrink-0"
+              className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-paper border border-border shadow-xs shrink-0"
             >
               {iconMap[item.icon] || <ShieldCheck className="w-4 h-4 text-gold" />}
               <span className="font-serif font-bold text-maroon text-sm">

@@ -1,5 +1,30 @@
 @import "tailwindcss";
 
+@theme {
+  --color-cream: #FFF9EF;
+  --color-paper: #FFFDF8;
+  --color-sand: #F6EBD6;
+  --color-border: #EADFC8;
+  --color-border-subtle: #F2EADA;
+  --color-ink: #2A1A14;
+  --color-ink-muted: #57463E;
+  --color-muted: #6E5E54;
+  --color-maroon: #7A1F14;
+  --color-maroon-deep: #5C140C;
+  --color-saffron: #E8710A;
+  --color-saffron-deep: #B8470A;
+  --color-gold: #D4A02C;
+  --color-gold-light: #F7EBD2;
+  --color-gold-dark: #9F751B;
+  --color-banyan: #3E7B3A;
+  --color-banyan-deep: #2A5627;
+  --color-banyan-light: #EAF4E8;
+
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-manrope), system-ui, -apple-system, sans-serif;
+  --font-devanagari: var(--font-devanagari), serif;
+}
+
 :root {
   color-scheme: light;
   --cream: #FFF9EF;
@@ -24,45 +49,6 @@
   --background: var(--cream);
   --foreground: var(--ink);
 }
-
-/* Heritage Theme Color Utilities */
-.bg-cream { background-color: var(--cream); }
-.bg-paper { background-color: var(--paper); }
-.bg-sand { background-color: var(--sand); }
-.bg-maroon { background-color: var(--maroon); }
-.bg-maroon-deep { background-color: var(--maroon-deep); }
-.bg-saffron { background-color: var(--saffron); }
-.bg-saffron-deep { background-color: var(--saffron-deep); }
-.bg-gold { background-color: var(--gold); }
-.bg-gold-light { background-color: var(--gold-light); }
-.bg-banyan { background-color: var(--banyan); }
-.bg-banyan-light { background-color: var(--banyan-light); }
-
-.text-cream { color: var(--cream); }
-.text-paper { color: var(--paper); }
-.text-sand { color: var(--sand); }
-.text-ink { color: var(--ink); }
-.text-ink-muted { color: var(--ink-muted); }
-.text-muted { color: var(--muted); }
-.text-maroon { color: var(--maroon); }
-.text-maroon-deep { color: var(--maroon-deep); }
-.text-saffron { color: var(--saffron); }
-.text-saffron-deep { color: var(--saffron-deep); }
-.text-gold { color: var(--gold); }
-.text-gold-light { color: var(--gold-light); }
-.text-gold-dark { color: var(--gold-dark); }
-.text-banyan { color: var(--banyan); }
-.text-banyan-deep { color: var(--banyan-deep); }
-
-.border-border { border-color: var(--border); }
-.border-gold { border-color: var(--gold); }
-.border-maroon { border-color: var(--maroon); }
-.border-saffron { border-color: var(--saffron); }
-.border-banyan { border-color: var(--banyan); }
-
-.font-serif { font-family: var(--font-cormorant), Georgia, serif; }
-.font-sans { font-family: var(--font-manrope), system-ui, -apple-system, sans-serif; }
-.font-devanagari { font-family: var(--font-devanagari), serif; }
 
 html {
   color-scheme: light;
@@ -203,12 +189,9 @@ body {
   outline-offset: 2px;
 }
 
-/* Reduced motion overrides */
+/* Respect prefers-reduced-motion for scroll behavior and abrupt jumps while preserving ambient content loops */
 @media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  html {
     scroll-behavior: auto !important;
   }
 }

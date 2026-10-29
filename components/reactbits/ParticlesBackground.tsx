@@ -1,15 +1,14 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { useReducedMotion } from "framer-motion";
 
 export function ParticlesBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     // Only on desktop and when reduced-motion is not requested
-    if (shouldReduceMotion || typeof window === "undefined" || window.innerWidth < 1024) {
+    const isReduced = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (isReduced || typeof window === "undefined" || window.innerWidth < 1024) {
       return;
     }
 
@@ -77,9 +76,7 @@ export function ParticlesBackground() {
       window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [shouldReduceMotion]);
-
-  if (shouldReduceMotion) return null;
+  }, []);
 
   return (
     <canvas
