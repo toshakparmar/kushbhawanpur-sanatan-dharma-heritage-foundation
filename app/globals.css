@@ -1,26 +1,214 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+  --cream: #FFF9EF;
+  --paper: #FFFDF8;
+  --sand: #F6EBD6;
+  --border: #EADFC8;
+  --border-subtle: #F2EADA;
+  --ink: #2A1A14;
+  --ink-muted: #57463E;
+  --muted: #6E5E54;
+  --maroon: #7A1F14;
+  --maroon-deep: #5C140C;
+  --saffron: #E8710A;
+  --saffron-deep: #B8470A;
+  --gold: #D4A02C;
+  --gold-light: #F7EBD2;
+  --gold-dark: #9F751B;
+  --banyan: #3E7B3A;
+  --banyan-deep: #2A5627;
+  --banyan-light: #EAF4E8;
+
+  --background: var(--cream);
+  --foreground: var(--ink);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* Heritage Theme Color Utilities */
+.bg-cream { background-color: var(--cream); }
+.bg-paper { background-color: var(--paper); }
+.bg-sand { background-color: var(--sand); }
+.bg-maroon { background-color: var(--maroon); }
+.bg-maroon-deep { background-color: var(--maroon-deep); }
+.bg-saffron { background-color: var(--saffron); }
+.bg-saffron-deep { background-color: var(--saffron-deep); }
+.bg-gold { background-color: var(--gold); }
+.bg-gold-light { background-color: var(--gold-light); }
+.bg-banyan { background-color: var(--banyan); }
+.bg-banyan-light { background-color: var(--banyan-light); }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.text-cream { color: var(--cream); }
+.text-paper { color: var(--paper); }
+.text-sand { color: var(--sand); }
+.text-ink { color: var(--ink); }
+.text-ink-muted { color: var(--ink-muted); }
+.text-muted { color: var(--muted); }
+.text-maroon { color: var(--maroon); }
+.text-maroon-deep { color: var(--maroon-deep); }
+.text-saffron { color: var(--saffron); }
+.text-saffron-deep { color: var(--saffron-deep); }
+.text-gold { color: var(--gold); }
+.text-gold-light { color: var(--gold-light); }
+.text-gold-dark { color: var(--gold-dark); }
+.text-banyan { color: var(--banyan); }
+.text-banyan-deep { color: var(--banyan-deep); }
+
+.border-border { border-color: var(--border); }
+.border-gold { border-color: var(--gold); }
+.border-maroon { border-color: var(--maroon); }
+.border-saffron { border-color: var(--saffron); }
+.border-banyan { border-color: var(--banyan); }
+
+.font-serif { font-family: var(--font-cormorant), Georgia, serif; }
+.font-sans { font-family: var(--font-manrope), system-ui, -apple-system, sans-serif; }
+.font-devanagari { font-family: var(--font-devanagari), serif; }
+
+html {
+  color-scheme: light;
+  background-color: var(--cream);
+  color: var(--ink);
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-manrope), system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Tabular numerals for ₹ amounts and account details */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Paper texture overlay (subtle 3-4% grain) */
+.paper-texture {
+  background-image: radial-gradient(rgba(122, 31, 20, 0.03) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* Subtle gold halo glow for sacred elements */
+.glow-gold {
+  box-shadow: 0 0 40px -10px rgba(212, 160, 44, 0.35);
+}
+
+.glow-diya {
+  animation: diyaPulse 2.8s ease-in-out infinite alternate;
+}
+
+@keyframes diyaPulse {
+  0% {
+    filter: drop-shadow(0 0 4px rgba(232, 113, 10, 0.5)) drop-shadow(0 0 12px rgba(212, 160, 44, 0.3));
+  }
+  100% {
+    filter: drop-shadow(0 0 10px rgba(232, 113, 10, 0.8)) drop-shadow(0 0 24px rgba(212, 160, 44, 0.6));
+  }
+}
+
+/* Sun-ray continuous slow rotation */
+@keyframes sunRaySpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes marqueeLeft {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marqueeRight {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+
+.animate-marquee-left {
+  animation: marqueeLeft linear infinite;
+}
+
+.animate-marquee-right {
+  animation: marqueeRight linear infinite;
+}
+
+.animate-sun-rays {
+  animation: sunRaySpin 120s linear infinite;
+}
+
+/* Mandala slow rotation */
+.animate-mandala-spin {
+  animation: sunRaySpin 180s linear infinite;
+}
+
+/* Custom hairline borders and cards */
+.card-heritage {
+  background-color: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 4px 20px -2px rgba(74, 31, 20, 0.04);
+}
+
+.card-heritage:hover {
+  border-color: rgba(212, 160, 44, 0.5);
+  box-shadow: 0 12px 30px -4px rgba(74, 31, 20, 0.07);
+}
+
+/* Button variants */
+.btn-primary {
+  background-color: var(--saffron-deep);
+  color: var(--cream);
+  font-weight: 600;
+  border-radius: 9999px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px -2px rgba(184, 71, 10, 0.35);
+}
+
+.btn-primary:hover {
+  background-color: var(--maroon);
+  color: var(--cream);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px -3px rgba(122, 31, 20, 0.45);
+}
+
+.btn-secondary {
+  border: 1px solid var(--maroon);
+  color: var(--maroon);
+  background-color: transparent;
+  font-weight: 600;
+  border-radius: 9999px;
+  transition: all 0.25s ease;
+}
+
+.btn-secondary:hover {
+  background-color: rgba(122, 31, 20, 0.06);
+  border-color: var(--maroon-deep);
+}
+
+/* Custom focus ring */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* Reduced motion overrides */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
