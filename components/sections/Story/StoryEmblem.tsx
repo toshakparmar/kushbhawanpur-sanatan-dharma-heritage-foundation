@@ -37,13 +37,20 @@ export function StoryEmblem({
   const transform = getEmblemTransform(currentChapter.hotspot, isReduced);
 
   return (
-    <div
-      className={
-        isTabletStrip
-          ? "w-full flex flex-col items-center justify-center py-2"
-          : "sticky top-24 lg:top-28 w-full flex flex-col items-center justify-center"
-      }
-    >
+    <div className="w-full flex flex-col items-center justify-center">
+      {/* Active Symbol Indicator Badge on Desktop */}
+      {!isTabletStrip && (
+        <div className="mb-5 inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-cream/90 border border-gold/40 text-maroon text-xs font-serif font-semibold shadow-xs">
+          <span className="text-saffron font-bold">{currentChapter.numberDevanagari}</span>
+          <span className="text-gold/80">·</span>
+          <span>{currentChapter.symbolName}</span>
+          <span className="text-gold/80">·</span>
+          <span className="text-muted text-[11px] font-sans">
+            Symbol {currentChapter.index + 1} of 5
+          </span>
+        </div>
+      )}
+
       {/* Emblem Frame with Arched Border & Glow */}
       <div
         className={

@@ -14,19 +14,25 @@ export function Story() {
   const chapterRefs = useRef<(HTMLElement | null)[]>([]);
   const prefersReduced = useReducedMotion();
 
-  // Scroll spy for chapters
+  // Precise viewport-centered scroll spy for chapters
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + window.innerHeight * 0.45;
+      const targetLine = window.innerHeight * 0.45;
+      let closestIdx = 0;
+      let minDistance = Infinity;
 
       chapterRefs.current.forEach((el, index) => {
         if (!el) return;
-        const top = el.offsetTop;
-        const height = el.offsetHeight;
-        if (scrollPosition >= top && scrollPosition < top + height) {
-          setActiveChapterIndex(index);
+        const rect = el.getBoundingClientRect();
+        const chapterCenter = rect.top + rect.height * 0.4;
+        const dist = Math.abs(chapterCenter - targetLine);
+        if (dist < minDistance) {
+          minDistance = dist;
+          closestIdx = index;
         }
       });
+
+      setActiveChapterIndex(closestIdx);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -56,7 +62,7 @@ export function Story() {
     <section
       id="story"
       aria-labelledby="story-section-title"
-      className="relative w-full overflow-hidden bg-paper transition-colors duration-700 pt-20 pb-12"
+      className="relative w-full bg-paper transition-colors duration-700 pt-20 pb-12"
       style={{
         backgroundColor: currentChapter.tint
       }}
@@ -138,10 +144,10 @@ export function Story() {
 
       {/* Main Chapters Content Area */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Desktop Layout (>= 1024px): 2 Columns (Sticky Emblem Left, Scrolling Chapters Right) */}
-        <div className="hidden lg:grid lg:grid-cols-12 lg:gap-12 items-start">
-          {/* Left Column: Sticky Emblem */}
-          <div className="lg:col-span-5 relative">
+        {/* Desktop Layout (>= 1024px): 2 Columns (Sticky Left Emblem Showcase, Smooth Scrolling Right Chapters) */}
+        <div className="hidden lg:grid lg:grid-cols-12 lg:gap-12 xl:gap-16 items-start relative">
+          {/* Left Column: Fixed / Sticky Emblem Showcase */}
+          <div className="lg:col-span-5 lg:sticky lg:top-28 self-start pt-2 pb-8">
             <StoryEmblem
               activeIndex={activeChapterIndex}
               onSelectChapter={handleSelectChapter}
@@ -149,7 +155,7 @@ export function Story() {
           </div>
 
           {/* Right Column: Scrolling Chapters */}
-          <div className="lg:col-span-7 flex flex-col">
+          <div className="lg:col-span-7 flex flex-col space-y-24 xl:space-y-32 py-4">
             {STORY_CONTENT.chapters.map((chapter, index) => (
               <div
                 key={chapter.id}

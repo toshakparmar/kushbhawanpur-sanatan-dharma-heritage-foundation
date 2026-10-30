@@ -93,8 +93,8 @@ export const STORY_CONTENT: StoryContent = {
       mobileDetailCrop: "/images/story/story-om.webp",
       hotspot: {
         x: 50,
-        y: 17,
-        radius: 13
+        y: 34,
+        radius: 12
       },
       tint: "rgba(212, 160, 44, 0.05)"
     },

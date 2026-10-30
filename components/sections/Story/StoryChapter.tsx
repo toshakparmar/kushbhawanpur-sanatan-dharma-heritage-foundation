@@ -25,10 +25,15 @@ export function StoryChapter({
       id={`story-chapter-${chapter.id}`}
       aria-labelledby={headingId}
       className={cn(
-        "relative w-full transition-opacity duration-500",
+        "relative w-full",
         isMobileCard
           ? "py-8 border-b border-gold/20 last:border-b-0"
-          : "min-h-[85vh] lg:min-h-[92vh] flex flex-col justify-center py-16 scroll-mt-28"
+          : cn(
+              "min-h-[75vh] lg:min-h-[85vh] flex flex-col justify-center py-12 scroll-mt-32 transition-all duration-500",
+              isActive
+                ? "opacity-100 scale-100"
+                : "lg:opacity-40 hover:opacity-85 lg:scale-[0.985]"
+            )
       )}
     >
       <div className="flex flex-col gap-6">

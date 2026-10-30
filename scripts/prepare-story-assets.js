@@ -34,7 +34,7 @@ async function prepareStoryAssets() {
   // Temple: (50%, 55%)
 
   const crops = [
-    { name: 'story-om.webp', cx: 0.50, cy: 0.17, zoom: 2.2 },
+    { name: 'story-om.webp', cx: 0.50, cy: 0.34, zoom: 2.2 },
     { name: 'story-book.webp', cx: 0.50, cy: 0.82, zoom: 1.9 },
     { name: 'story-gau.webp', cx: 0.75, cy: 0.66, zoom: 2.2 },
     { name: 'story-parijat.webp', cx: 0.22, cy: 0.48, zoom: 1.8 },
