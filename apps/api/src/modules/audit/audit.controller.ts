@@ -21,7 +21,7 @@ export class AuditController {
       this.prisma.auditLog.findMany({
         skip,
         take: limit,
-        orderBy: { at: 'desc' },
+        orderBy: { createdAt: 'desc' },
         include: {
           actor: {
             select: { id: true, email: true, role: true },

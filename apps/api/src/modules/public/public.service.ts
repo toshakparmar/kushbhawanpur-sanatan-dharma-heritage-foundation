@@ -33,19 +33,19 @@ export class PublicService {
         where: { id: 'singleton' },
       }),
       this.prisma.milestone.findMany({
-        orderBy: [{ sort: 'asc' }, { year: 'asc' }],
+        orderBy: [{ sortOrder: 'asc' }, { year: 'asc' }],
       }),
       this.prisma.teamMember.findMany({
         where: { active: true },
-        orderBy: [{ sort: 'asc' }, { createdAt: 'asc' }],
+        orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
       }),
       this.prisma.certification.findMany({
         where: { active: true },
-        orderBy: [{ sort: 'asc' }, { issueDate: 'desc' }],
+        orderBy: [{ sortOrder: 'asc' }, { issueDate: 'desc' }],
       }),
       this.prisma.video.findMany({
         where: { published: true },
-        orderBy: [{ sort: 'asc' }, { createdAt: 'desc' }],
+        orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
       }),
     ]);
 
@@ -78,7 +78,7 @@ export class PublicService {
       }),
       this.prisma.seva.findMany({
         where: { active: true },
-        orderBy: [{ sort: 'asc' }, { createdAt: 'asc' }],
+        orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
       }),
     ]);
 
@@ -102,17 +102,26 @@ export class PublicService {
       };
     });
 
+    const minAmountPaise = settings?.minAmountRupees ? settings.minAmountRupees * 100 : 10000;
+    const maxAmountPaise = settings?.maxAmountRupees ? settings.maxAmountRupees * 100 : 100000000;
+
     return {
-      paymentSettings: settings || {
-        qrMode: QrMode.DYNAMIC,
-        minAmountPaise: 10000,
-        maxAmountPaise: 100000000,
-        presetAmounts: [501, 1100, 2100, 5100, 11000, 21000],
-        allowUpi: true,
-        allowBank: true,
-        allowCheque: true,
-        allowCsr: true,
-      },
+      paymentSettings: settings
+        ? {
+            ...settings,
+            minAmountPaise,
+            maxAmountPaise,
+          }
+        : {
+            qrMode: QrMode.DYNAMIC,
+            minAmountPaise: 10000,
+            maxAmountPaise: 100000000,
+            presetAmounts: [501, 1100, 2100, 5100, 11000, 21000],
+            allowUpi: true,
+            allowBank: true,
+            allowCheque: true,
+            allowCsr: true,
+          },
       primaryUpi: primaryUpi
         ? {
             id: primaryUpi.id,
@@ -144,8 +153,8 @@ export class PublicService {
     const settings = await this.prisma.paymentSettings.findUnique({
       where: { id: 'singleton' },
     });
-    const minPaise = settings?.minAmountPaise || 10000;
-    const maxPaise = settings?.maxAmountPaise || 100000000;
+    const minPaise = settings?.minAmountRupees ? settings.minAmountRupees * 100 : 10000;
+    const maxPaise = settings?.maxAmountRupees ? settings.maxAmountRupees * 100 : 100000000;
 
     if (amountPaise < minPaise || amountPaise > maxPaise) {
       throw new BadRequestException(
@@ -237,7 +246,7 @@ export class PublicService {
       refId: donation.refId,
       donorToken,
       amountPaise: donation.amountPaise,
-      amountRupees: donation.amountPaise / 100,
+      amountRupees: Number(donation.amountPaise) / 100,
       seva: {
         id: seva.id,
         titleEn: seva.titleEn,
@@ -361,7 +370,7 @@ export class PublicService {
       refId: donation.refId,
       status: donation.status,
       amountPaise: donation.amountPaise,
-      amountRupees: donation.amountPaise / 100,
+      amountRupees: Number(donation.amountPaise) / 100,
       sevaTitle: donation.seva.titleEn,
       utr: donation.utr ? `****${donation.utr.slice(-4)}` : null,
       createdAt: donation.createdAt,
@@ -400,7 +409,7 @@ export class PublicService {
       receiptNo: receipt.receiptNo,
       issuedAt: receipt.issuedAt,
       amountPaise: receipt.donation.amountPaise,
-      amountRupees: receipt.donation.amountPaise / 100,
+      amountRupees: Number(receipt.donation.amountPaise) / 100,
       sevaTitle: receipt.donation.seva.titleEn,
       paymentMethod: receipt.donation.method,
       orgName: org?.nameEn || 'Kushbhawanpur Sanatan Dharma & Heritage Foundation',
@@ -416,9 +425,11 @@ export class PublicService {
   async createReminder(email: string, sevaId?: string, dayOfMonth: number = 1) {
     return this.prisma.reminderSubscription.create({
       data: {
+        name: 'Devotee',
+        phone: '',
         email: email.toLowerCase().trim(),
         sevaId: sevaId || null,
-        dayOfMonth: Math.min(Math.max(dayOfMonth, 1), 28),
+        preferredDay: Math.min(Math.max(dayOfMonth, 1), 28),
       },
     });
   }

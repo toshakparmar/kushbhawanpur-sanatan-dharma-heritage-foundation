@@ -45,7 +45,10 @@ export class DonorsService {
 
     const items = donors.map((d) => {
       const verifiedDonations = d.donations;
-      const totalPaise = verifiedDonations.reduce((sum, item) => sum + (item.receivedAmountPaise || 0), 0);
+      const totalPaise = verifiedDonations.reduce(
+        (sum, item) => sum + Number(item.receivedAmountPaise || 0),
+        0,
+      );
       const dates = verifiedDonations.map((item) => item.createdAt.getTime());
       const firstDonation = dates.length > 0 ? new Date(Math.min(...dates)) : null;
       const lastDonation = dates.length > 0 ? new Date(Math.max(...dates)) : null;
@@ -109,7 +112,7 @@ export class DonorsService {
       donations: donor.donations.map((d) => ({
         id: d.id,
         refId: d.refId,
-        amountRupees: (d.receivedAmountPaise || d.amountPaise) / 100,
+        amountRupees: Number(d.receivedAmountPaise || d.amountPaise) / 100,
         status: d.status,
         method: d.method,
         sevaTitle: d.seva.titleEn,

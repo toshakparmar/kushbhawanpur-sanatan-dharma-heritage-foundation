@@ -90,7 +90,7 @@ export class ReconciliationService {
       const matched = pendingDonations.find((d) => {
         const utrMatches = row.refOrUtr && d.utr && d.utr.toLowerCase() === row.refOrUtr.toLowerCase();
         const refInDesc = d.refId && row.description.toUpperCase().includes(d.refId.toUpperCase());
-        const amountMatches = Math.abs(d.amountPaise - rowPaise) < 100; // Within ₹1
+        const amountMatches = Math.abs(Number(d.amountPaise) - rowPaise) < 100; // Within ₹1
 
         return (utrMatches || refInDesc) && amountMatches;
       });
@@ -102,7 +102,7 @@ export class ReconciliationService {
             id: matched.id,
             refId: matched.refId,
             donorName: matched.donor.name,
-            amountRupees: matched.amountPaise / 100,
+            amountRupees: Number(matched.amountPaise) / 100,
             utr: matched.utr,
             sevaTitle: matched.seva.titleEn,
           },

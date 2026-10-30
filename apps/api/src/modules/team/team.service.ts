@@ -12,7 +12,7 @@ export class TeamService {
 
   async findAll() {
     return this.prisma.teamMember.findMany({
-      orderBy: [{ sort: 'asc' }, { createdAt: 'asc' }],
+      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
     });
   }
 
@@ -31,8 +31,8 @@ export class TeamService {
         designation: dto.designation,
         photoUrl: dto.photoUrl || null,
         bio: dto.bio || null,
-        socials: dto.socials || null,
-        sort: Number(dto.sort) || 0,
+        socialLinks: dto.socialLinks || dto.socials || null,
+        sortOrder: Number(dto.sortOrder ?? dto.sort) || 0,
         active: dto.active !== undefined ? Boolean(dto.active) : true,
       },
     });
@@ -59,8 +59,12 @@ export class TeamService {
         ...(dto.designation && { designation: dto.designation }),
         ...(dto.photoUrl !== undefined && { photoUrl: dto.photoUrl }),
         ...(dto.bio !== undefined && { bio: dto.bio }),
-        ...(dto.socials !== undefined && { socials: dto.socials }),
-        ...(dto.sort !== undefined && { sort: Number(dto.sort) }),
+        ...((dto.socialLinks !== undefined || dto.socials !== undefined) && {
+          socialLinks: dto.socialLinks || dto.socials,
+        }),
+        ...((dto.sortOrder !== undefined || dto.sort !== undefined) && {
+          sortOrder: Number(dto.sortOrder ?? dto.sort),
+        }),
         ...(dto.active !== undefined && { active: Boolean(dto.active) }),
       },
     });

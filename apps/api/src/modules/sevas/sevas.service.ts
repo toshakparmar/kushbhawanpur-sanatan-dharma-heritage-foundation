@@ -11,7 +11,7 @@ export class SevasService {
 
   async findAll() {
     return this.prisma.seva.findMany({
-      orderBy: { sort: 'asc' },
+      orderBy: { sortOrder: 'asc' },
     });
   }
 
@@ -22,16 +22,18 @@ export class SevasService {
   }
 
   async create(adminId: string, dto: any, ip?: string) {
+    const slug = dto.slug || dto.titleEn.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     const seva = await this.prisma.seva.create({
       data: {
-        id: dto.id || dto.titleEn.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        ...(dto.id && { id: dto.id }),
+        slug,
         titleEn: dto.titleEn,
         titleHi: dto.titleHi || '',
-        description: dto.description,
+        description: dto.description || '',
         suggestedAmounts: dto.suggestedAmounts || [501, 1100, 2100, 5100],
-        image: dto.image || null,
+        imageUrl: dto.imageUrl || dto.image || null,
         active: dto.active !== undefined ? Boolean(dto.active) : true,
-        sort: Number(dto.sort) || 0,
+        sortOrder: Number(dto.sortOrder ?? dto.sort) || 0,
       },
     });
 
@@ -50,13 +52,14 @@ export class SevasService {
     const updated = await this.prisma.seva.update({
       where: { id },
       data: {
+        ...(dto.slug && { slug: dto.slug }),
         ...(dto.titleEn && { titleEn: dto.titleEn }),
         ...(dto.titleHi !== undefined && { titleHi: dto.titleHi }),
         ...(dto.description && { description: dto.description }),
         ...(dto.suggestedAmounts && { suggestedAmounts: dto.suggestedAmounts }),
-        ...(dto.image !== undefined && { image: dto.image }),
+        ...((dto.imageUrl !== undefined || dto.image !== undefined) && { imageUrl: dto.imageUrl || dto.image }),
         ...(dto.active !== undefined && { active: Boolean(dto.active) }),
-        ...(dto.sort !== undefined && { sort: Number(dto.sort) }),
+        ...((dto.sortOrder !== undefined || dto.sort !== undefined) && { sortOrder: Number(dto.sortOrder ?? dto.sort) }),
       },
     });
 

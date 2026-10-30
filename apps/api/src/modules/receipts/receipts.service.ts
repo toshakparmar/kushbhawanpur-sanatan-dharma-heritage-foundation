@@ -57,7 +57,7 @@ export class ReceiptsService {
         refId: r.donation.refId,
         donorName: r.donation.donor.name,
         donorEmail: r.donation.donor.email,
-        amountRupees: (r.donation.receivedAmountPaise || r.donation.amountPaise) / 100,
+        amountRupees: Number(r.donation.receivedAmountPaise || r.donation.amountPaise) / 100,
         sevaTitle: r.donation.seva.titleEn,
       })),
       total,

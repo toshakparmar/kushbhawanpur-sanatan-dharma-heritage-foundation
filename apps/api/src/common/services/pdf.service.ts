@@ -40,6 +40,48 @@ export interface ReceiptPdfData {
 export class PdfService {
   private readonly logger = new Logger(PdfService.name);
 
+  async generateReceipt(data: any): Promise<Buffer> {
+    const amountRupees =
+      data.amountRupees || (data.amountPaise ? Number(data.amountPaise) / 100 : 0);
+    const siteUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      'https://kushbhawanpur-sanatan-dharma-herita.vercel.app';
+    const verifyUrl = `${siteUrl}/verify-receipt/${encodeURIComponent(data.receiptNo)}`;
+
+    return this.generateDonationReceipt({
+      receiptNo: data.receiptNo,
+      fy: data.fy || '2026-27',
+      issuedAt: data.date || data.issuedAt || new Date(),
+      donationRefId: data.refId || data.donationRefId,
+      amountRupees,
+      sevaTitle: data.sevaTitle,
+      method: data.paymentMethod || data.method || 'UPI',
+      utr: data.utr,
+      paymentAt: data.paymentAt,
+      donorName: data.donorName,
+      donorEmail: data.donorEmail,
+      donorPhone: data.donorPhone,
+      donorAddress: data.donorAddress,
+      donorPan: data.donorPan,
+      isVoid: data.isVoid,
+      voidReason: data.voidReason,
+      orgNameEn: data.orgNameEn,
+      orgNameHi: data.orgNameHi,
+      orgAddress: data.orgAddress,
+      orgPhone: data.orgPhone,
+      orgEmail: data.orgEmail,
+      orgPan: data.orgPan,
+      orgRegNo: data.orgRegNo,
+      approval80G: data.approval80G,
+      approval12A: data.approval12A,
+      signatoryName: data.signatoryName,
+      signatoryDesignation: data.signatoryDesignation,
+      signatureUrl: data.signatureUrl,
+      footerNote: data.footerNote,
+      verifyUrl,
+    });
+  }
+
   async generateDonationReceipt(data: ReceiptPdfData): Promise<Buffer> {
     return new Promise(async (resolve, reject) => {
       try {

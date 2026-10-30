@@ -42,6 +42,69 @@ export class MailService {
     }
   }
 
+  async sendDonationReceipt(options: {
+    to: string;
+    donorName: string;
+    receiptNo: string;
+    amountRupees?: number;
+    amountPaise?: number | bigint;
+    sevaTitle: string;
+    pdfBuffer: Buffer;
+    verifyUrl?: string;
+    orgName?: string;
+  }): Promise<boolean> {
+    const amountRupees =
+      options.amountRupees || (options.amountPaise ? Number(options.amountPaise) / 100 : 0);
+    const verifyUrl =
+      options.verifyUrl ||
+      `${this.siteUrl}/verify-receipt/${encodeURIComponent(options.receiptNo)}`;
+    return this.sendReceiptEmail(
+      options.to,
+      options.donorName,
+      options.receiptNo,
+      amountRupees,
+      options.sevaTitle,
+      options.pdfBuffer,
+      verifyUrl,
+    );
+  }
+
+  async sendDonationRejected(options: {
+    to: string;
+    donorName: string;
+    refId: string;
+    reason: string;
+    orgName?: string;
+  }): Promise<boolean> {
+    return this.sendVerificationFailed(
+      options.to,
+      options.donorName,
+      options.refId,
+      options.reason,
+    );
+  }
+
+  async sendProofReceived(options: {
+    to: string;
+    donorName: string;
+    refId: string;
+    amountRupees?: number;
+    amountPaise?: number | bigint;
+    sevaTitle: string;
+    utr?: string;
+    orgName?: string;
+  }): Promise<boolean> {
+    const amountRupees =
+      options.amountRupees || (options.amountPaise ? Number(options.amountPaise) / 100 : 0);
+    return this.sendDonationReceived(
+      options.to,
+      options.donorName,
+      options.refId,
+      amountRupees,
+      options.sevaTitle,
+    );
+  }
+
   async sendDonationReceived(
     to: string,
     donorName: string,

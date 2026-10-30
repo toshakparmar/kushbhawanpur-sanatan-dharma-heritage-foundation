@@ -11,7 +11,7 @@ export class CertificationsService {
 
   async findAll() {
     return this.prisma.certification.findMany({
-      orderBy: [{ sort: 'asc' }, { issueDate: 'desc' }],
+      orderBy: [{ sortOrder: 'asc' }, { issueDate: 'desc' }],
     });
   }
 
@@ -30,7 +30,7 @@ export class CertificationsService {
         issueDate: dto.issueDate ? new Date(dto.issueDate) : null,
         fileUrl: dto.fileUrl,
         thumbUrl: dto.thumbUrl || dto.fileUrl,
-        sort: Number(dto.sort) || 0,
+        sortOrder: Number(dto.sortOrder ?? dto.sort) || 0,
         active: dto.active !== undefined ? Boolean(dto.active) : true,
       },
     });
@@ -54,10 +54,14 @@ export class CertificationsService {
         ...(dto.title && { title: dto.title }),
         ...(dto.issuer && { issuer: dto.issuer }),
         ...(dto.number !== undefined && { number: dto.number }),
-        ...(dto.issueDate !== undefined && { issueDate: dto.issueDate ? new Date(dto.issueDate) : null }),
+        ...(dto.issueDate !== undefined && {
+          issueDate: dto.issueDate ? new Date(dto.issueDate) : null,
+        }),
         ...(dto.fileUrl && { fileUrl: dto.fileUrl }),
         ...(dto.thumbUrl !== undefined && { thumbUrl: dto.thumbUrl }),
-        ...(dto.sort !== undefined && { sort: Number(dto.sort) }),
+        ...((dto.sortOrder !== undefined || dto.sort !== undefined) && {
+          sortOrder: Number(dto.sortOrder ?? dto.sort),
+        }),
         ...(dto.active !== undefined && { active: Boolean(dto.active) }),
       },
     });

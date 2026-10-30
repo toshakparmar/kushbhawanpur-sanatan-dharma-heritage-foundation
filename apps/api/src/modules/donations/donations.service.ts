@@ -118,7 +118,7 @@ export class DonationsService {
         refId: d.refId,
         amountPaise: d.amountPaise,
         receivedAmountPaise: d.receivedAmountPaise,
-        amountRupees: d.amountPaise / 100,
+        amountRupees: Number(d.amountPaise) / 100,
         status: d.status,
         method: d.method,
         utr: d.utr,
@@ -554,7 +554,7 @@ export class DonationsService {
     const sevaDistribution = sevas.map((s) => ({
       id: s.id,
       title: s.titleEn,
-      totalPaise: s.donations.reduce((sum, d) => sum + (d.receivedAmountPaise || 0), 0),
+      totalPaise: s.donations.reduce((sum, d) => sum + Number(d.receivedAmountPaise || 0), 0),
       count: s.donations.length,
     }));
 
@@ -565,15 +565,15 @@ export class DonationsService {
       include: { donor: true, seva: true, receipt: true },
     });
 
-    const totalVerifiedPaise = allTimeStats._sum.receivedAmountPaise || 0;
+    const totalVerifiedPaise = Number(allTimeStats._sum.receivedAmountPaise || 0);
     const totalCount = allTimeStats._count.id || 0;
     const avgPaise = totalCount > 0 ? Math.round(totalVerifiedPaise / totalCount) : 0;
 
     return {
       allTimeVerifiedPaise: totalVerifiedPaise,
       allTimeVerifiedRupees: totalVerifiedPaise / 100,
-      thisFyVerifiedPaise: thisFyStats._sum.receivedAmountPaise || 0,
-      thisMonthVerifiedPaise: thisMonthStats._sum.receivedAmountPaise || 0,
+      thisFyVerifiedPaise: Number(thisFyStats._sum.receivedAmountPaise || 0),
+      thisMonthVerifiedPaise: Number(thisMonthStats._sum.receivedAmountPaise || 0),
       verifiedCount: totalCount,
       pendingCount,
       donorCount,
@@ -584,7 +584,7 @@ export class DonationsService {
         id: r.id,
         refId: r.refId,
         donorName: r.donor.name,
-        amountRupees: (r.receivedAmountPaise || r.amountPaise) / 100,
+        amountRupees: Number(r.receivedAmountPaise || r.amountPaise) / 100,
         status: r.status,
         sevaTitle: r.seva.titleEn,
         createdAt: r.createdAt,

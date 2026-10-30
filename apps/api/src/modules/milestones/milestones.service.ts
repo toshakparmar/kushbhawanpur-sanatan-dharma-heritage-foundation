@@ -11,7 +11,7 @@ export class MilestonesService {
 
   async findAll() {
     return this.prisma.milestone.findMany({
-      orderBy: [{ sort: 'asc' }, { year: 'asc' }],
+      orderBy: [{ sortOrder: 'asc' }, { year: 'asc' }],
     });
   }
 
@@ -27,7 +27,7 @@ export class MilestonesService {
         year: dto.year.trim(),
         title: dto.title.trim(),
         text: dto.text.trim(),
-        sort: Number(dto.sort) || 0,
+        sortOrder: Number(dto.sortOrder ?? dto.sort) || 0,
       },
     });
 
@@ -49,7 +49,9 @@ export class MilestonesService {
         ...(dto.year && { year: dto.year.trim() }),
         ...(dto.title && { title: dto.title.trim() }),
         ...(dto.text && { text: dto.text.trim() }),
-        ...(dto.sort !== undefined && { sort: Number(dto.sort) }),
+        ...((dto.sortOrder !== undefined || dto.sort !== undefined) && {
+          sortOrder: Number(dto.sortOrder ?? dto.sort),
+        }),
       },
     });
 

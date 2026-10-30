@@ -12,7 +12,7 @@ export class VideosService {
 
   async findAll() {
     return this.prisma.video.findMany({
-      orderBy: [{ sort: 'asc' }, { createdAt: 'desc' }],
+      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
     });
   }
 
@@ -40,11 +40,11 @@ export class VideosService {
         provider: parsed.provider,
         videoId: parsed.videoId,
         embedUrl: parsed.embedUrl,
-        thumbnailUrl: dto.thumbnailUrl || parsed.thumbnailUrl || null,
+        thumbUrl: dto.thumbUrl || dto.thumbnailUrl || parsed.thumbnailUrl || null,
         description: dto.description?.trim() || null,
         category: dto.category?.trim() || 'General',
         featured: Boolean(dto.featured),
-        sort: Number(dto.sort) || 0,
+        sortOrder: Number(dto.sortOrder ?? dto.sort) || 0,
         published: dto.published !== undefined ? Boolean(dto.published) : true,
       },
     });
@@ -62,7 +62,7 @@ export class VideosService {
   }
 
   async update(adminId: string, id: string, dto: any, ip?: string) {
-    let parsedFields = {};
+    let parsedFields: any = {};
     if (dto.sourceUrl) {
       const parsed = VideoUrlParser.parse(dto.sourceUrl);
       parsedFields = {
@@ -70,7 +70,7 @@ export class VideosService {
         provider: parsed.provider,
         videoId: parsed.videoId,
         embedUrl: parsed.embedUrl,
-        thumbnailUrl: dto.thumbnailUrl || parsed.thumbnailUrl,
+        thumbUrl: dto.thumbUrl || dto.thumbnailUrl || parsed.thumbnailUrl,
       };
     }
 
@@ -86,11 +86,15 @@ export class VideosService {
       data: {
         ...(dto.title && { title: dto.title.trim() }),
         ...parsedFields,
-        ...(dto.thumbnailUrl !== undefined && { thumbnailUrl: dto.thumbnailUrl }),
+        ...((dto.thumbUrl !== undefined || dto.thumbnailUrl !== undefined) && {
+          thumbUrl: dto.thumbUrl || dto.thumbnailUrl,
+        }),
         ...(dto.description !== undefined && { description: dto.description?.trim() || null }),
         ...(dto.category && { category: dto.category.trim() }),
         ...(dto.featured !== undefined && { featured: Boolean(dto.featured) }),
-        ...(dto.sort !== undefined && { sort: Number(dto.sort) }),
+        ...((dto.sortOrder !== undefined || dto.sort !== undefined) && {
+          sortOrder: Number(dto.sortOrder ?? dto.sort),
+        }),
         ...(dto.published !== undefined && { published: Boolean(dto.published) }),
       },
     });
