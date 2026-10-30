@@ -11,14 +11,12 @@ import { MobileSheet } from "@/components/layout/MobileSheet";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
-  { href: "#home", label: "Home" },
-  { href: "#about", label: "Mission" },
-  { href: "#story", label: "Our Story" },
-  { href: "#work", label: "Our Work" },
+  { href: "#about", label: "About" },
+  { href: "#team", label: "Team" },
+  { href: "#story", label: "Story" },
+  { href: "#work", label: "Work" },
+  { href: "#videos", label: "Videos" },
   { href: "#donate", label: "Donate" },
-  { href: "#impact", label: "Impact" },
-  { href: "#involve", label: "Get Involved" },
-  { href: "#faq", label: "FAQ" },
   { href: "#contact", label: "Contact" },
 ];
 

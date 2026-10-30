@@ -3,9 +3,42 @@ import Image from "next/image";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { SpotlightCard } from "@/components/reactbits/SpotlightCard";
 import { siteConfig } from "@/content/site.config";
-import { Shield, BookOpen, HeartHandshake, Sparkles, Compass } from "lucide-react";
+import {
+  Shield,
+  BookOpen,
+  HeartHandshake,
+  Sparkles,
+  Compass,
+  CheckCircle2,
+  Calendar,
+  Award,
+  Landmark,
+} from "lucide-react";
 
-export function About() {
+interface Milestone {
+  id: string;
+  year: string;
+  title: string;
+  text: string;
+}
+
+interface AboutProps {
+  org?: {
+    nameEn?: string;
+    nameHi?: string;
+    aboutEn?: string;
+    visionEn?: string;
+    missionEn?: string;
+    regNo?: string;
+    panNo?: string;
+    approval80G?: string;
+    approval12A?: string;
+    darpanId?: string;
+  };
+  milestones?: Milestone[];
+}
+
+export function About({ org, milestones = [] }: AboutProps) {
   const pillars = [
     {
       title: "Dharma (Righteous Living)",
@@ -33,10 +66,30 @@ export function About() {
     },
   ];
 
+  const aboutText =
+    org?.aboutEn ||
+    "Kushbhawanpur, an ancient cultural geography rich in epic history, holds sacred shrines, centuries-old stone temples, and revered banyan groves that require urgent structural and spiritual revival.";
+
+  const visionText =
+    org?.visionEn ||
+    "Through collaborative donor partnerships, traditional stone carvers, and scholarly researchers, the foundation ensures that sacred shrines remain living centres of worship, wisdom, and selfless community seva.";
+
+  const missionText =
+    org?.missionEn ||
+    "Conserving heritage temples, supporting traditional gurukuls, caring for indigenous cows, and fostering community solidarity through transparent, authentic seva.";
+
+  // Registration chips - appear ONLY if the admin has filled them
+  const regChips = [
+    org?.regNo ? { label: "Registered Trust", val: org.regNo } : null,
+    org?.panNo ? { label: "Trust PAN", val: org.panNo } : null,
+    org?.approval80G ? { label: "80G Tax Exemption", val: org.approval80G } : null,
+    org?.approval12A ? { label: "12A Registration", val: org.approval12A } : null,
+    org?.darpanId ? { label: "NITI Aayog Darpan", val: org.darpanId } : null,
+  ].filter(Boolean) as Array<{ label: string; val: string }>;
+
   return (
     <section id="about" className="py-20 lg:py-28 bg-cream relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
         {/* Section Heading */}
         <SectionHeading
           hindiBadge="हमारी संकल्पना एवं उद्देश्य"
@@ -47,10 +100,9 @@ export function About() {
 
         {/* Editorial Story Layout with Overlapping Photos */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center mb-16">
-          
           {/* Photos Layering */}
           <div className="lg:col-span-6 relative">
-            <div className="relative rounded-3xl overflow-hidden border border-border shadow-xl aspect-[4/3] bg-paper">
+            <div className="relative rounded-3xl overflow-hidden border border-border shadow-xl aspect-4/3 bg-paper">
               <Image
                 src="/images/about-arches.webp"
                 alt="Intricate ancient Indian temple courtyard arches and carved pillars"
@@ -85,29 +137,84 @@ export function About() {
             </div>
           </div>
 
-          {/* Mission Copy */}
+          {/* Mission & Vision Copy */}
           <div className="lg:col-span-6 flex flex-col space-y-5 text-left">
             <h3 className="font-serif text-2xl sm:text-3xl font-bold text-maroon leading-snug">
               Guarding the Sacred Roots of Kushbhawanpur
             </h3>
 
             <p className="text-sm sm:text-base text-ink-muted leading-relaxed font-sans">
-              Kushbhawanpur, an ancient cultural geography rich in epic history, holds sacred shrines, centuries-old stone temples, and revered banyan groves that require urgent structural and spiritual revival.
+              {aboutText}
             </p>
 
             <p className="text-sm sm:text-base text-ink-muted leading-relaxed font-sans">
-              Through collaborative donor partnerships, traditional stone carvers, and scholarly researchers, the foundation ensures that sacred shrines remain living centres of worship, wisdom, and selfless community seva.
+              {visionText}
             </p>
 
-            <div className="p-4 rounded-2xl bg-sand/50 border border-border flex items-start gap-3">
+            {missionText && (
+              <p className="text-sm sm:text-base text-ink-muted leading-relaxed font-sans">
+                {missionText}
+              </p>
+            )}
+
+            {/* Statutory Identity Chips (Only displayed if filled by admin) */}
+            {regChips.length > 0 && (
+              <div className="pt-2 flex flex-wrap gap-2">
+                {regChips.map((chip, idx) => (
+                  <div
+                    key={idx}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-paper border border-gold/50 shadow-xs text-xs font-sans"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 text-saffron shrink-0" />
+                    <span className="text-ink-muted">{chip.label}:</span>
+                    <span className="font-semibold text-maroon">{chip.val}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="p-4 rounded-2xl bg-sand/50 border border-border flex items-start gap-3 mt-2">
               <Sparkles className="w-5 h-5 text-saffron shrink-0 mt-0.5" />
               <p className="text-xs text-ink-muted leading-relaxed">
                 <strong className="text-maroon font-semibold">Our Solemn Pledge:</strong> Every contribution is allocated strictly toward verified charitable causes without institutional intermediaries or excessive administrative costs.
               </p>
             </div>
           </div>
-
         </div>
+
+        {/* Mini-Timeline: Our Journey (Hidden if empty!) */}
+        {milestones.length > 0 && (
+          <div className="mb-20 pt-8 border-t border-gold/30">
+            <div className="text-center mb-10">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-saffron/10 text-saffron-deep font-serif text-sm font-semibold border border-saffron/20">
+                <Calendar className="w-4 h-4" />
+                Our Journey & Milestones
+              </span>
+              <h4 className="font-serif text-2xl sm:text-3xl font-bold text-maroon mt-2">
+                Key Steps Along the Sacred Path
+              </h4>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {milestones.map((m) => (
+                <div
+                  key={m.id}
+                  className="rounded-2xl bg-paper p-6 border border-gold/40 shadow-xs hover:shadow-md transition-shadow relative"
+                >
+                  <span className="font-serif font-bold text-2xl text-saffron block mb-1">
+                    {m.year}
+                  </span>
+                  <h5 className="font-serif text-lg font-bold text-maroon mb-2">
+                    {m.title}
+                  </h5>
+                  <p className="text-xs sm:text-sm text-ink-muted leading-relaxed font-sans">
+                    {m.text}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* 4 Value Pillars as SpotlightCards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
@@ -138,7 +245,6 @@ export function About() {
             );
           })}
         </div>
-
       </div>
     </section>
   );

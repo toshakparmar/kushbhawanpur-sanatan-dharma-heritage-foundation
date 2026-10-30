@@ -7,6 +7,7 @@ interface SectionHeadingProps {
   hindiBadge?: string;
   title: string;
   description?: string;
+  subtitle?: string;
   align?: "left" | "center";
   className?: string;
   showDivider?: boolean;
@@ -17,10 +18,12 @@ export function SectionHeading({
   hindiBadge,
   title,
   description,
+  subtitle,
   align = "center",
   className,
   showDivider = true,
 }: SectionHeadingProps) {
+  const desc = description || subtitle;
   return (
     <div
       className={cn(
@@ -48,9 +51,9 @@ export function SectionHeading({
       </h2>
 
       {/* Description */}
-      {description && (
+      {desc && (
         <p className="text-sm sm:text-base text-ink-muted leading-relaxed font-sans max-w-2xl text-pretty">
-          {description}
+          {desc}
         </p>
       )}
 
