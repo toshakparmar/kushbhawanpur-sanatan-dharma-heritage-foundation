@@ -15,7 +15,24 @@ All photography is hosted locally in `public/images/` and pre-optimized to WebP 
 | `apple-touch-icon.png` | PNG | 180×180 | iOS home screen bookmark icon |
 | `icon-192.png` | PNG | 192×192 | Android PWA mobile launcher icon |
 | `icon-512.png` | PNG | 512×512 | PWA splash and high-res launcher icon |
+| `emblem.webp` / `emblem.png` | WebP/PNG | 512×512 | Cropped sacred emblem only (wordmark excluded) for Story sticky interaction |
 | `og-image.jpg` | JPG | 1200×630 | Social sharing card (Twitter, WhatsApp, LinkedIn, Facebook) |
+
+---
+
+### Story Section Detail Crops & Photography (`public/images/story/`)
+| Asset | Format | Resolution | Subject / Purpose |
+| :--- | :--- | :--- | :--- |
+| `story-om.webp` | WebP | 480×480 | Zoomed mobile detail crop of the crown Om symbol |
+| `story-book.webp` | WebP | 480×480 | Zoomed mobile detail crop of the open book & diya |
+| `story-gau.webp` | WebP | 480×480 | Zoomed mobile detail crop of sacred Gau Mata |
+| `story-parijat.webp` | WebP | 480×480 | Zoomed mobile detail crop of the sacred Parijat/Banyan tree |
+| `story-dhopap.webp` | WebP | 480×480 | Zoomed mobile detail crop of the central temple shikhara |
+| `om-chapter.webp` | WebP | 960×720 | Brass diya radiating warm spiritual light |
+| `manuscript-chapter.webp` | WebP | 960×720 | Ancient Sanskrit palm-leaf manuscript study |
+| `gau-chapter.webp` | WebP | 960×720 | Indigenous desi cow receiving gentle care at golden hour |
+| `parijat-chapter.webp` | WebP | 960×720 | Ancient sacred grove canopy representing historic Parijat |
+| `dhopap-chapter.webp` | WebP | 960×720 | Sacred Gomti river ghat and temple shikhara at sunrise |
 
 ---
 

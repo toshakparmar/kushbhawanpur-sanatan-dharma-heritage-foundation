@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -12,6 +13,7 @@ import { cn } from "@/lib/utils";
 const NAV_LINKS = [
   { href: "#home", label: "Home" },
   { href: "#about", label: "Mission" },
+  { href: "#story", label: "Our Story" },
   { href: "#work", label: "Our Work" },
   { href: "#donate", label: "Donate" },
   { href: "#impact", label: "Impact" },

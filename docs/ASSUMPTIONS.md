@@ -36,3 +36,21 @@ This document records the architectural, cultural, and technical design decision
 ### 4. Motion System Architecture
 - **Separation of Motion Libraries**: Framer Motion handles interactive layout transitions, spring gestures, and 3D pointer parallax. GSAP and canvas handle continuous ambient rotations (sun rays, background canvas particles). No single element is animated by both frameworks simultaneously.
 - **Reduced Motion Compliance**: Whenever `prefers-reduced-motion` is detected, animations gracefully collapse into static, instant transitions.
+
+---
+
+### 5. Story Section ("Five Symbols, One Sankalpa") Design Decisions
+- **Sticky Emblem vs. Pinning**:
+  - Pinned long scrolling (scroll-jacking) was intentionally avoided to prevent trap states and ensure standard, fluid accessibility across desktop touchpads, mice, and assistive devices.
+  - Desktop uses CSS `position: sticky; top: header height + 24px` on the left column with Framer Motion spring interpolation for the gold hotspot ring and dynamic `transform-origin` emblem zoom.
+- **Responsive Layout Strategy**:
+  - Desktop (≥ 1024px): Two-column sticky emblem + scrolling chapters + 5-dot rail.
+  - Tablet (768–1023px): Sticky top emblem strip (≈ 38vh) with centered hotspot and stacked chapter cards.
+  - Mobile (< 768px): Sticky horizontal pill-nav under header + self-contained chapter cards featuring dedicated zoomed emblem detail crops (`story-*.webp`) to guarantee maximum clarity on compact viewports.
+- **Hotspot Tuning**:
+  - Hotspot coordinates are calibrated in `content/story.ts` (Om: 50%, 17%; Book: 50%, 82%; Cow: 75%, 66%; Tree: 22%, 48%; Temple: 50%, 55%).
+  - A developer debugging overlay (`?debugHotspots=1`) is provided in non-production environments to verify alignment.
+- **Performance & CLS Prevention**:
+  - Story section is dynamically loaded with `next/dynamic` with a matching skeleton placeholder, keeping main bundle size lean.
+  - Pre-generated WebP detail crops avoid client-side canvas extraction overhead.
+

@@ -4,6 +4,20 @@ import React, { useState } from "react";
 import { Hero } from "@/components/sections/Hero";
 import { TrustStrip } from "@/components/sections/TrustStrip";
 import { About } from "@/components/sections/About";
+import dynamic from "next/dynamic";
+
+const Story = dynamic(
+  () => import("@/components/sections/Story/Story").then((mod) => mod.Story),
+  {
+    loading: () => (
+      <div className="w-full min-h-[600px] bg-paper animate-pulse flex items-center justify-center">
+        <span className="text-gold font-serif text-sm">Loading Our Story...</span>
+      </div>
+    ),
+    ssr: true,
+  }
+);
+
 import { Work } from "@/components/sections/Work";
 import { Donate } from "@/components/sections/Donate";
 import { Impact } from "@/components/sections/Impact";
@@ -40,6 +54,9 @@ export default function HomePage() {
 
       {/* 4.4 About & Mission Section */}
       <About />
+
+      {/* 4.4.5 Our Story — Five Symbols, One Sankalpa */}
+      <Story />
 
       {/* 4.5 Our Work / Focus Areas Bento */}
       <Work onSelectCause={handleSelectCause} />

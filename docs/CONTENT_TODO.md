@@ -69,3 +69,17 @@ Every item listed below is currently controlled via typed configuration in [`con
   - Action: Verify that the Sanskrit shloka and English translation meet the trustees' exact scriptural tradition.
 - [ ] **Focus Area Details & Beneficiary Outcomes**
   - Verify that the 6 focus areas (Temple Restoration, Dharmic Education, Gau Seva, Annadanam, Sacred Groves, Heritage Archives) and suggested seva amounts match the foundation's current fiscal priorities.
+
+---
+
+### 5. Story Section ("Five Symbols, One Sankalpa") ⚑ Flagged Verification Items
+- [ ] ⚑ **Chapter 1: Māṇḍūkya Upaniṣad Verse**
+  - Text used: *"ओमित्येतदक्षरमिदं सर्वम्"* (Māṇḍūkya Upaniṣad, 1). Confirm trustees prefer this verse or another traditional invocatory mantra.
+- [ ] ⚑ **Chapter 3: Rigvedic aghnyā interpretation**
+  - Rigveda uses *aghnyā* ("not to be killed"). The text carefully distinguishes early Vedic terminology from the 1st millennium CE *Gau Mata* veneration traditions.
+- [ ] ⚑ **Chapter 4: Sultanpur Parijat Tree vs Kintoor Tree**
+  - The Sultanpur district portal lists a Parijaat Vriksh on the District Industries Centre campus off PWD Road in Civil Lines. Confirm if this is the exact tree referenced in the foundation's video/materials, and provide original photographs if available. Kintoor (*Adansonia digitata*, radiocarbon dated 775 calendar years) is cited as botanical context.
+- [ ] ⚑ **Chapter 5: Dhopap Dham & Diyara Fort Legends**
+  - Location and fairs (Ganga Dussehra / Chaitra Ram Navami) verified on district portal (sultanpur.nic.in).
+  - The Padma Purana (Patala Khanda) Brahmahatya remorse, Vashishtha dialogue, the naming of Diyara from *diya*, and Raja Rudra Pratap Singh of Diyara details originate in local accounts and reference video ("Dhopap Dham & Diyara Fort history", PK Pramas, 2019). Trustees should review and confirm whether additional archival citations exist.
+

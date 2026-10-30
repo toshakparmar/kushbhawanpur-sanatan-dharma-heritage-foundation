@@ -71,6 +71,11 @@ export function Footer() {
             </h4>
             <ul className="flex flex-col space-y-2 text-xs text-ink-muted">
               <li>
+                <a href="#story" className="hover:text-maroon transition-colors font-medium text-maroon">
+                  Our Story — Five Symbols
+                </a>
+              </li>
+              <li>
                 <a href="#donate" className="hover:text-maroon transition-colors">
                   Online UPI & Bank Giving
                 </a>
