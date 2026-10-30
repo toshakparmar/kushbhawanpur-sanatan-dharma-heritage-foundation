@@ -41,16 +41,16 @@ async function main() {
     create: {
       id: 'singleton',
       qrMode: QrMode.DYNAMIC,
-      minAmountPaise: 10000, // ₹100
-      maxAmountPaise: 100000000, // ₹10,00,000
+      minAmountRupees: 100,
+      maxAmountRupees: 1000000,
       presetAmounts: [501, 1100, 2100, 5100, 11000, 21000],
       allowUpi: true,
       allowBank: true,
       allowCheque: true,
       allowCsr: true,
-      chequePayee: 'Kushbhawanpur Sanatan Dharma & Heritage Foundation',
+      chequePayeeName: 'Kushbhawanpur Sanatan Dharma & Heritage Foundation',
       chequeAddress: 'Kushbhawanpur (Sultanpur), Uttar Pradesh - 228001, India',
-      csrContactEmail: 'csr@kushbhawanpur.org',
+      csrContact: 'csr@kushbhawanpur.org',
       verificationSlaText:
         'Our accounts volunteers verify transactions against bank records within 1–2 working days and email an official donation receipt.',
     },
@@ -59,7 +59,7 @@ async function main() {
 
   // 3. Super Admin User
   const adminEmail = process.env.ADMIN_EMAIL || 'admin@kushbhawanpur.org';
-  const initialPassword = process.env.ADMIN_INITIAL_PASSWORD || 'Admin@12345';
+  const initialPassword = process.env.ADMIN_INITIAL_PASSWORD || 'ChangeMe@2026!';
   const salt = await bcrypt.genSalt(12);
   const passwordHash = await bcrypt.hash(initialPassword, salt);
 
@@ -80,69 +80,75 @@ async function main() {
   const sevas = [
     {
       id: 'temple-preservation',
+      slug: 'temple-preservation',
       titleEn: 'Temple & Heritage Preservation',
       titleHi: 'पुरातन मंदिर संरक्षण',
       description:
         'Restoring and conserving ancient stone shrines, historic mandapas, and sacred architectural landmarks of Kushbhawanpur.',
       suggestedAmounts: [1100, 2100, 5100, 11000],
-      image: '/images/work-temple.webp',
+      imageUrl: '/images/work-temple.webp',
       active: true,
-      sort: 1,
+      sortOrder: 1,
     },
     {
       id: 'scripture-education',
+      slug: 'scripture-education',
       titleEn: 'Dharmic Education & Scriptures',
       titleHi: 'वैदिक शिक्षा एवं ग्रंथ स्वाध्याय',
       description:
         'Supporting traditional gurukuls, Sanskrit scholars, and youth study circles in Vedic philosophy and cultural heritage.',
       suggestedAmounts: [501, 1100, 2100, 5100],
-      image: '/images/work-scriptures.webp',
+      imageUrl: '/images/work-scriptures.webp',
       active: true,
-      sort: 2,
+      sortOrder: 2,
     },
     {
       id: 'gau-seva',
+      slug: 'gau-seva',
       titleEn: 'Gau Seva & Animal Care',
       titleHi: 'गौ सेवा एवं संवर्धन',
       description:
         'Shelter, nutrition, veterinary care, and loving protection for indigenous desi cows and calves in clean rural sanctuaries.',
       suggestedAmounts: [501, 1100, 2500, 5000],
-      image: '/images/work-gau-seva.webp',
+      imageUrl: '/images/work-gau-seva.webp',
       active: true,
-      sort: 3,
+      sortOrder: 3,
     },
     {
       id: 'community-seva',
+      slug: 'community-seva',
       titleEn: 'Community Seva & Annadanam',
       titleHi: 'अन्नदान एवं सामुदायिक सेवा',
       description:
         'Wholesome sacred meal distribution during major dharmic festivals, pilgrim gatherings, and in underserved rural hamlets.',
       suggestedAmounts: [1100, 2100, 5100, 11000],
-      image: '/images/work-community.webp',
+      imageUrl: '/images/work-community.webp',
       active: true,
-      sort: 4,
+      sortOrder: 4,
     },
     {
       id: 'sacred-groves',
+      slug: 'sacred-groves',
       titleEn: 'Sacred Groves & Banyan Ecology',
       titleHi: 'पवित्र उपवन एवं पर्यावरण संरक्षण',
       description:
         'Planting and protecting sacred banyan, peepal, and neem groves around pilgrimage routes and village water bodies.',
       suggestedAmounts: [501, 1100, 2100, 5100],
-      image: '/images/work-environment.webp',
+      imageUrl: '/images/work-environment.webp',
       active: true,
-      sort: 5,
+      sortOrder: 5,
     },
     {
       id: 'heritage-archives',
+      slug: 'heritage-archives',
       titleEn: 'Manuscript & Heritage Archives',
       titleHi: 'प्राचीन पाण्डुलिपि एवं शोध अभिलेख',
       description:
         'High-resolution digital archiving and physical conservation of rare manuscripts, historical inscriptions, and oral lore.',
       suggestedAmounts: [1100, 2500, 5000, 15000],
-      image: '/images/work-archives.webp',
+      imageUrl: '/images/work-archives.webp',
       active: true,
-      sort: 6,
+      sortOrder: 6,
     },
   ];
 
@@ -150,13 +156,14 @@ async function main() {
     await prisma.seva.upsert({
       where: { id: seva.id },
       update: {
+        slug: seva.slug,
         titleEn: seva.titleEn,
         titleHi: seva.titleHi,
         description: seva.description,
         suggestedAmounts: seva.suggestedAmounts,
-        image: seva.image,
+        imageUrl: seva.imageUrl,
         active: seva.active,
-        sort: seva.sort,
+        sortOrder: seva.sortOrder,
       },
       create: seva,
     });
@@ -177,10 +184,10 @@ async function main() {
         provider: 'YOUTUBE',
         videoId: 'dQw4w9WgXcQ',
         embedUrl: 'https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ',
-        thumbnailUrl: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
+        thumbUrl: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
         category: 'Heritage',
         featured: true,
-        sort: 1,
+        sortOrder: 1,
         published: true,
       },
     });
