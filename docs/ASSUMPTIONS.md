@@ -26,15 +26,18 @@ This document records the architectural, cultural, and technical design decision
 
 ---
 
-### 3. Truth-in-Content Policy
-- **No Fabricated Registrations**: Unlike typical mock websites, all statutory tax approvals (80G, 12A, CSR, Darpan) are guarded by boolean flags in `content/site.config.ts`.
-- **Honest FAQ**: When 80G is false, the FAQ explicitly informs donors that the registration is in progress, maintaining ethical transparency.
-- **Safe Fallback Channels**: Telephone, WhatsApp, and Google Map embeds cleanly hide when set to `null` to avoid displaying broken links or generic dummy placeholders.
+### 3. Truth-in-Content Policy & Zero Fake Data
+- **No Fabricated Data**:
+  - We never invent trustees, volunteers, tax registration numbers, or fake donation records.
+  - **Dynamic Sections Auto-Hide When Empty**: If the database contains no active records for Team Members, Certifications, or Videos, those sections automatically hide on the public website.
+  - By default, seed scripts initialize only the `SUPER_ADMIN` user, singleton configuration, and the 6 foundational sevas. Demo records are strictly isolated behind `SEED_DEMO=true` and clearly labeled `[DEMO]`.
+- **Statutory Registration Guard**:
+  - Registration lines (PAN, 80G, 12A, CSR, Darpan) are printed on official donation receipts **only when filled by the administrator**. Never default to claiming tax exemptions without valid legal orders.
 
 ---
 
 ### 4. Motion System Architecture
-- **Separation of Motion Libraries**: Framer Motion handles interactive layout transitions, spring gestures, and 3D pointer parallax. GSAP and canvas handle continuous ambient rotations (sun rays, background canvas particles). No single element is animated by both frameworks simultaneously.
+- **Separation of Motion Libraries**: Framer Motion handles interactive layout transitions, spring gestures, and 3D pointer parallax. GSAP handles smooth ticker marquees. No single element is animated by both frameworks simultaneously.
 - **Reduced Motion Compliance**: Whenever `prefers-reduced-motion` is detected, animations gracefully collapse into static, instant transitions.
 
 ---
@@ -42,15 +45,32 @@ This document records the architectural, cultural, and technical design decision
 ### 5. Story Section ("Five Symbols, One Sankalpa") Design Decisions
 - **Sticky Emblem vs. Pinning**:
   - Pinned long scrolling (scroll-jacking) was intentionally avoided to prevent trap states and ensure standard, fluid accessibility across desktop touchpads, mice, and assistive devices.
-  - Desktop uses CSS `position: sticky; top: header height + 24px` on the left column with Framer Motion spring interpolation for the gold hotspot ring and dynamic `transform-origin` emblem zoom.
+  - Desktop uses CSS `position: sticky; top: 112px; align-self: start;` on the left column with Framer Motion spring interpolation for the gold hotspot ring and dynamic `transform-origin` emblem zoom.
 - **Responsive Layout Strategy**:
   - Desktop (≥ 1024px): Two-column sticky emblem + scrolling chapters + 5-dot rail.
-  - Tablet (768–1023px): Sticky top emblem strip (≈ 38vh) with centered hotspot and stacked chapter cards.
   - Mobile (< 768px): Sticky horizontal pill-nav under header + self-contained chapter cards featuring dedicated zoomed emblem detail crops (`story-*.webp`) to guarantee maximum clarity on compact viewports.
-- **Hotspot Tuning**:
-  - Hotspot coordinates are calibrated in `content/story.ts` (Om: 50%, 17%; Book: 50%, 82%; Cow: 75%, 66%; Tree: 22%, 48%; Temple: 50%, 55%).
-  - A developer debugging overlay (`?debugHotspots=1`) is provided in non-production environments to verify alignment.
-- **Performance & CLS Prevention**:
-  - Story section is dynamically loaded with `next/dynamic` with a matching skeleton placeholder, keeping main bundle size lean.
-  - Pre-generated WebP detail crops avoid client-side canvas extraction overhead.
 
+---
+
+### 6. Dynamic Content, Backend & Payment Architecture
+
+1. **Incremental Static Regeneration (ISR) with Graceful Offline Fallback**:
+   - `output: 'export'` was removed from Next.js to enable server-side ISR (`revalidate: 60`).
+   - If the API or PostgreSQL database is ever offline, `lib/api.ts` gracefully serves fallback data from `content/site.config.ts`. The public page never breaks.
+
+2. **Direct Payments Without Payment Gateways**:
+   - Commercial gateway intermediaries (charging 2%+ fees) are excluded.
+   - Dynamic UPI QR codes are generated on the fly per transaction using NPCI URI standards:
+     `upi://pay?pa=<vpa>&pn=<payee>&am=<amount.00>&cu=INR&tn=<refId+sevaCode>`
+   - `tn` (Transaction Note) carries the unique donation reference (e.g. `KSDHF-7K3Q9M`) so accounts volunteers can instantly match the entry in bank statements.
+   - A `PaymentProvider` abstraction (`ManualUpiProvider`) is established so future webhook-driven gateways (e.g., Razorpay/PhonePe) can be added seamlessly without rewriting frontend flows.
+
+3. **Database Integrity & Concurrency**:
+   - All financial amounts are stored as **integer paise** (never floating-point numbers).
+   - Receipt numbering `{PREFIX}/{FY}/{5-digit sequence}` (e.g., `KSDHF/2026-27/00001`) is guaranteed gapless per financial year using atomic interactive transactions on `ReceiptCounter`.
+   - Receipts are permanent financial records; cancellations are stamped as `VOID` with an audit reason and never deleted.
+
+4. **Cryptographic Privacy & DPDP Compliance**:
+   - Donor PAN numbers, personal physical addresses, and foundation bank account numbers are encrypted at rest using **AES-256-GCM**.
+   - Public receipt verification (`/verify-receipt/<no>`) returns authenticity, issue date, seva, and amount with **zero donor PII**.
+   - One-click DPDP data erasure anonymizes donor identity while preserving audited accounting figures.

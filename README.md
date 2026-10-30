@@ -1,242 +1,154 @@
 # Kushbhawanpur Sanatan Dharma & Heritage Foundation
-### Official Seva & Heritage Conservation Landing Page · Production Donation Portal
+### Dynamic Non-Profit Platform · Video CMS · Gateway-Free Donation Records & Receipts · Admin Portal
 
 [![Next.js 16](https://img.shields.io/badge/Next.js-16.4.3-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-[![React 19](https://img.shields.io/badge/React-19.3.0-blue?style=for-the-badge&logo=react)](https://react.dev/)
+[![NestJS 11](https://img.shields.io/badge/NestJS-11.0-E0234E?style=for-the-badge&logo=nestjs)](https://nestjs.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=for-the-badge&logo=postgresql)](https://www.postgresql.org/)
+[![Prisma ORM](https://img.shields.io/badge/Prisma-6.4-2D3748?style=for-the-badge&logo=prisma)](https://www.prisma.io/)
 [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4.0-38bdf8?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178c6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Static Export](https://img.shields.io/badge/Output-Static_Export-green?style=for-the-badge)](https://nextjs.org/docs/app/building-your-application/deploying/static-exports)
 
 > **धर्मो रक्षति रक्षितः** · *Dharmo Rakshati Rakshitah*  
 > *“Dharma protects those who protect Dharma.”*
 
-A production-ready, single-page, fully static, light-theme-only official donation and seva website for the **Kushbhawanpur Sanatan Dharma & Heritage Foundation**. Crafted with an editorial bookbinding visual aesthetic (warm paper tones, hairline borders, dignified Cormorant Garamond serif headlines, and golden accents) honoring sacred Hindu civilizational heritage.
+Production site: [https://kushbhawanpur-sanatan-dharma-herita.vercel.app/](https://kushbhawanpur-sanatan-dharma-herita.vercel.app/)
 
 ---
 
-## 🏛️ About the Foundation
+## 🏛️ Project Overview
 
-The **Kushbhawanpur Sanatan Dharma & Heritage Foundation** is an independent charitable trust registered in the historic cultural geography of Kushbhawanpur (Sultanpur), Uttar Pradesh. The foundation is dedicated to:
-- **Temple & Monument Conservation**: Restoring centuries-old stone shrines, mandapas, and historic teerthas.
-- **Vedic Education & Manuscripts**: Supporting traditional gurukuls, Vedic scholars, and digitizing rare Sanskrit texts.
-- **Gau Seva & Animal Care**: Providing shelter, veterinary care, and fresh fodder for indigenous desi cows and calves.
-- **Annadanam & Community Seva**: Serving pure, wholesome satvik meals to pilgrims, sadhus, and underserved families.
-- **Sacred Groves (Tapovana)**: Planting and nurturing native banyan, peepal, and neem groves around holy precincts.
+A complete dynamic platform for the **Kushbhawanpur Sanatan Dharma & Heritage Foundation** (Sultanpur, Uttar Pradesh), transforming the static landing page into a full-featured, admin-managed non-profit system:
 
----
-
-## ✨ Key Features & Components
-
-### 1. Header & Navigation
-- **Dual Brand Presentation**: Official sacred emblem and horizontal lockup with crisp typography.
-- **Sticky Glassmorphism Header**: Backdrop blur on scroll, active section indicator via Framer Motion `layoutId`, and quick donation trigger.
-- **Accessible Mobile Drawer**: Sheet menu with smooth transitions, touch-friendly anchors, and emergency contact links.
-- **Top Sanskrit Utility Bar**: Displays registered precinct address, official email, and sacred motto.
-
-### 2. Dignified Hero Section
-- **Sacred 3D Composition**: Layered depth with Ken Burns animated sunrise temple arch photography, rotating golden sun-ray burst, floating golden ॐ medallion, pennant dhwaja, and an animated diya emblem.
-- **Editorial Headline**: Cormorant Garamond serif typography with smooth character reveal animations.
-- **Dual Direct CTAs**: "Donate with Gratitude" (with diya icon) and "Explore Our Focus Areas".
-
-### 3. Trust & Transparency Ticker (Marquee)
-- **Continuous Seamless Stream**: Infinite, full-width sliding ticker highlighting the foundation's core commitments:
-  - *Official Channels Only* (Direct trust accounts)
-  - *100% Non-Profit Seva* (Zero intermediary commissions)
-  - *Donor Privacy Honoured* (No data sharing or marketing spam)
-  - *Transparent Reporting* (Regular photographic & financial updates)
-- **Interactive Pause**: Smooth pause on hover for easy reading.
-
-### 4. Mission & Value Pillars
-- **Editorial Narrative**: Historical background of Kushbhawanpur's sacred soil and the foundation's solemn pledge.
-- **Spotlight Cards**: 4 core values (Civilizational Preservation, Gau Samrakshan, Annadanam, Vedic Knowledge) with dynamic radial mouse-follow illumination.
-
-### 5. Focus Areas (Bento Grid)
-- **6 Sacred Mission Verticals**:
-  1. *Temple & Heritage Preservation* (Suggested Seva: ₹2,100)
-  2. *Dharmic Education & Scriptures* (Suggested Seva: ₹1,100)
-  3. *Gau Seva & Animal Care* (Suggested Seva: ₹501)
-  4. *Community Seva & Annadanam* (Suggested Seva: ₹5,100)
-  5. *Sacred Groves & Banyan Ecology* (Suggested Seva: ₹1,100)
-  6. *Manuscript & Heritage Archives* (Suggested Seva: ₹5,100)
-- **3D Tilt Interaction**: Responsive cards with realistic physics-based 3D tilt on desktop.
-
-### 6. Interactive Multi-Modal Donation Portal (`#donate`)
-- **Flexible Amount Selection**: Preset donation tiles (`₹501`, `₹1,100`, `₹2,100`, `₹5,100`, `₹11,000`, `₹21,000`) with quick custom input.
-- **Dynamic Seva Purpose Selector**: Direct your contribution to a specific cause or General Seva.
-- **Real-Time Payment Tabs**:
-  - **UPI QR Code**: Dynamic QR code generated with `upi://pay` standard specification (pre-filled payee, merchant code, amount, and reference note). Includes quick launch links for Google Pay, PhonePe, and Paytm.
-  - **Bank Transfer (NEFT / RTGS / IMPS)**: Verified account details (Account Name, Bank, Account Number, IFSC, Account Type, Branch) with one-click clipboard copy and toast confirmations.
-  - **Cheque / Demand Draft**: Step-by-step dispatch guidelines and verified postal address.
-- **Celebratory AfterPay Workflow**:
-  - Immediate celebratory dialog with dynamic gold & saffron confetti shower.
-  - Optional receipt form (Full Name, Email, Phone, PAN Number, Transaction ID, Anonymous toggle).
-  - Client-side downloadable summary acknowledging the seva sankalpa.
-
-### 7. Sacred Moments Gallery (Lightbox)
-- **Curated Photography**: Pre-optimized responsive imagery of ancient sandstone mandapas, morning aarti, sacred banyan groves, and handwritten Sanskrit granthas.
-- **Category Filter Tabs**: All, Heritage, Seva, Gau Seva, Scriptures.
-- **Full-Screen Lightbox Modal**: High-resolution view with captions, dates, and category tags.
-
-### 8. Transparency & Community Engagement
-- **Impact Tiers**: Clear itemized breakdown of real-world outcomes for contributions of ₹501, ₹1,100, ₹2,100, ₹5,100, and ₹11,000.
-- **Get Involved Tabs**: Forms for Volunteering (field work, translation, event seva) and Corporate CSR partnerships with Zod validation.
-- **Interactive Dharmic Pledge**: Community counter allowing visitors to take a sacred pledge for heritage conservation.
-
-### 9. FAQ & Legal Policies
-- **Filterable Accordion FAQ**: Searchable categorized answers (General, Donations & Tax, Transparency, Volunteering).
-- **Embedded Policy Modals**: Terms of Seva, Privacy Policy, Contribution & Refund Policy, and 80G Tax Exemption Status disclosure.
+1. **About Section Upgrade**: Foundation narrative, **Founder & Co-Founder cards** (with arched logo mask and 3D tilt), **Volunteer cards**, and official **Certifications & Registrations** with lightbox viewers and PDF downloads.
+2. **Video CMS Carousel**: Admin adds YouTube/Vimeo/FB/Drive/MP4 video links; rendered as a polished carousel with 16:9 featured lite player.
+3. **Gateway-Free Direct Donations**:
+   - Zero gateway commission fees (saving 2%+ on every rupee).
+   - Dynamic UPI QR generated on the fly per transaction (`upi://pay`) pre-filling the donor's exact chosen amount and unique reference ID.
+   - Bank transfer (NEFT/RTGS/IMPS) instructions with one-click copy buttons.
+   - Proof submission (12-digit UTR and screenshot upload).
+   - One-click admin verification against bank records.
+   - Automated gapless receipt allocation (`{PREFIX}/{FY}/{5-digit sequence}`) with bilingual Devanagari PDF receipts emailed directly to donors.
+4. **Comprehensive Admin Panel (`/admin`)**:
+   - Collapsible sidebar, light theme matching heritage tokens, role-based access (`SUPER_ADMIN`, `ACCOUNTS`, `CONTENT`).
+   - Dashboard with verified totals (all-time, this FY, this month), prominent pending alerts, and seva breakdowns.
+   - Pending verification queue with bank-statement reference lookups.
+   - Bank statement CSV reconciliation tool.
+   - Donors registry with lifetime giving metrics and DPDP erasure.
+   - Complete CRUD for Organisation profile, UPI accounts, Bank accounts, Sevas, Team, Certifications, Videos, and Milestones.
+   - Admin user management and audit logging.
 
 ---
 
-## 🎨 Visual Design System
+## 🧱 Monorepo Architecture
 
-The visual design is inspired by traditional Indian manuscript craft and bookbinding warmth:
-
-| Token | Hex Value | Role |
-| :--- | :--- | :--- |
-| **Cream** | `#FFF9EF` | Primary page canvas background |
-| **Paper** | `#FFFDF8` | Card and modal surface background |
-| **Sand** | `#F6EBD6` | Secondary accent, badges, and utility strips |
-| **Hairline Border** | `#EADFC8` | Subtle separators and card borders |
-| **Maroon** | `#7A1F14` | Primary brand color, headlines, bold accents |
-| **Deep Maroon** | `#5C140C` | High-contrast footer background, dark badges |
-| **Saffron** | `#E8710A` | Primary CTA, Om emblem, auspicious highlights |
-| **Deep Saffron** | `#B8470A` | Primary button background |
-| **Gold** | `#D4A02C` | Sacred borders, medallions, diya glows |
-| **Banyan Green**| `#3E7B3A` | Environmental and nature accents |
-| **Ink** | `#2A1A14` | Primary body typography (warm, dark readable) |
-
-### Typography
-- **Headlines & Serif Accents**: [Cormorant Garamond](https://fonts.google.com/specimen/Cormorant+Garamond) (Weights: 600, 700)
-- **Body & UI**: [Manrope](https://fonts.google.com/specimen/Manrope) (Weights: 400, 500, 600, 700)
-- **Devanagari & Sanskrit Mantras**: [Noto Serif Devanagari](https://fonts.google.com/specimen/Noto+Serif+Devanagari) (Weights: 400, 600, 700)
-
----
-
-## 🛠️ Tech Stack & Architecture
-
-- **Framework**: [Next.js 16.4.3](https://nextjs.org/) (App Router, Turbopack)
-- **Runtime**: [React 19.3.0](https://react.dev/)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) with `@theme` token definitions
-- **PostCSS**: `@tailwindcss/postcss`
-- **Animations**: [Framer Motion](https://motion.dev/), [GSAP](https://greensock.com/), [Canvas Confetti](https://www.npmjs.com/package/canvas-confetti)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **QR Code**: [qrcode.react](https://www.npmjs.com/package/qrcode.react) (SVG rendering for crisp scanability)
-- **UI Primitives**: Radix UI (Dialog, Accordion, Tabs, Slot)
-- **Form Management**: React Hook Form with Zod schema validation
-- **Notifications**: Sonner toasts
+```
+├── apps/
+│   ├── web/                    # Next.js 16 (App Router, Tailwind v4, shadcn/ui, Framer Motion)
+│   │   ├── app/                # Public routes + /admin routes (noindex)
+│   │   ├── components/         # Heritage sections, donate stepper, admin components
+│   │   └── lib/                # ISR server fetchers, money formatters, UPI utilities
+│   │
+│   └── api/                    # NestJS 11 REST API + Prisma ORM + PostgreSQL
+│       ├── src/
+│       │   ├── common/         # Encryption (AES-256-GCM), PDF generator, Mailer, Storage, Guards
+│       │   ├── modules/        # Auth, Public, Donations, Sevas, Team, Certs, Videos, etc.
+│       │   └── prisma/         # Prisma schema, seeds, migrations
+│       └── uploads/            # File storage for receipts, proofs, and certificates
+│
+├── packages/
+│   └── shared/                 # Shared TypeScript models, Zod schemas, money & words helpers
+│
+└── docs/                       # Architecture, Admin Guide, Payment specs, Assumptions
+```
 
 ---
 
-## 🚀 Setup & Local Development Guide
+## 🚀 Getting Started
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) v18.18.0 or newer (v20+ recommended)
-- `npm` (v9+) or `pnpm` / `yarn`
+- Node.js ≥ 20.0
+- Docker & Docker Compose (optional, for local PostgreSQL)
 
-### 1. Clone the Repository
+### 1. Installation
+Clone the repository and install root dependencies:
 ```bash
 git clone https://github.com/toshakparmar/kushbhawanpur-sanatan-dharma-heritage-foundation.git
 cd kushbhawanpur-sanatan-dharma-heritage-foundation
-```
-
-### 2. Install Dependencies
-```bash
 npm install
 ```
 
-### 3. Run Development Server
+### 2. Environment Setup
+Copy the example environment configuration:
 ```bash
-npm run dev
+cp .env.example .env
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Key variables configured in `.env`:
+- `DATABASE_URL`: PostgreSQL connection string (default: `postgresql://postgres:postgres@localhost:5432/kushbhawanpur_db?schema=public`)
+- `JWT_SECRET`: Secret key for admin session cookies
+- `ENCRYPTION_KEY`: 32-character secret for AES-256-GCM encryption of PAN and bank details
+- `ADMIN_EMAIL`: Initial super administrator email (default: `admin@kushbhawanpur.org`)
+- `ADMIN_INITIAL_PASSWORD`: Initial default password (forced to change on first login)
 
-### 4. Build Production Static Export
+### 3. Database Initialization & Seeding
+Start PostgreSQL container (or use Neon/Supabase):
 ```bash
-npm run build
+docker-compose up -d
 ```
-This builds an optimized, static HTML/CSS/JS export in the `out/` directory, ready to be served from any web server, CDN, or hosting provider.
-
----
-
-## 🌐 Deploying to Vercel
-
-This repository is pre-configured for one-click static deployment on **Vercel**:
-
-1. Push your changes to the `main` branch on GitHub:
-   ```bash
-   git push origin main
-   ```
-2. Go to the [Vercel Dashboard](https://vercel.com/dashboard) and click **"Add New Project"**.
-3. Import the repository: `toshakparmar/kushbhawanpur-sanatan-dharma-heritage-foundation`.
-4. Vercel automatically detects Next.js:
-   - **Framework Preset**: Next.js
-   - **Build Command**: `next build`
-   - **Output Directory**: `out` (automatically configured via `output: "export"`)
-5. Click **"Deploy"**. Your official donation website will be live with free global CDN and SSL.
-
----
-
-## 📁 Repository Structure
-
+Generate Prisma client and seed the foundational database:
+```bash
+npm run prisma:generate --workspace=@kushbhawanpur/api
+npm run prisma:migrate --workspace=@kushbhawanpur/api
+npm run db:seed
 ```
-├── app/
-│   ├── globals.css          # Tailwind CSS v4 @theme tokens, keyframes, paper texture
-│   ├── layout.tsx           # Root layout, Google Fonts, JSON-LD Schema, SEO meta
-│   ├── manifest.ts          # PWA Web App Manifest
-│   ├── not-found.tsx        # Dignified 404 error page
-│   ├── page.tsx             # Main single-page landing page
-│   ├── robots.ts            # Dynamic robots.txt
-│   └── sitemap.ts           # Dynamic sitemap.xml
-├── components/
-│   ├── brand/               # Brand Logo, Diya, Mandala, LotusDivider, Ornaments
-│   ├── donate/              # AmountPicker, PurposeSelect, PaymentTabs, UpiQr, BankDetails
-│   ├── layout/              # Header, Footer, UtilityBar, MobileSheet, StickyDonateBar
-│   ├── reactbits/           # SplitText, BlurText, Magnet, TiltedCard, Marquee, ParticlesBackground
-│   ├── sections/            # Hero, TrustStrip, About, Work, Donate, Impact, Gallery, Involve, FAQ, Contact
-│   ├── shared/              # SectionHeading, MoneyText, LightboxGallery
-│   └── ui/                  # Accordion, Button, Dialog, Sheet, Tabs, Sonner
-├── content/
-│   ├── site.config.ts       # Single source of truth for bank details, UPI, contacts, focus areas
-│   ├── faq.ts               # Structured FAQ items and categories
-│   └── policies.ts          # Legal terms, privacy policy, refund policy
-├── public/
-│   ├── brand/               # Official logo, emblem, wordmark, horizontal lockup, favicons
-│   ├── images/              # Curated photographs (temple, gau-seva, scriptures, ghats)
-│   └── og/                  # OpenGraph social share card (1200×630)
-├── next.config.ts           # Next.js configuration (static export, unoptimized images, trailingSlash)
-└── package.json             # Project dependencies and build scripts
+
+### 4. Running the Applications
+Start the web application and API dev servers:
+```bash
+# Start Next.js frontend (http://localhost:3000)
+npm run dev:web
+
+# In a separate terminal, start NestJS backend (http://localhost:4000)
+npm run dev:api
 ```
 
 ---
 
-## ⚙️ Content & Organization Customization
+## 🔐 First Login & Admin Credentials
 
-All organization data, bank credentials, UPI handles, and focus areas are centralized in a single configuration file:
-👉 **[`content/site.config.ts`](file:///d:/Freelancing%20Projects/kushbhawanpur-sanatan-dharma-heritage-foundation/content/site.config.ts)**
-
-To update bank details or UPI ID for production:
-```typescript
-payment: {
-  upi: {
-    enabled: true,
-    vpa: "kushbhawanpur@sbi",          // Replace with official Foundation UPI VPA
-    payeeName: "Kushbhawanpur Foundation",
-    merchantCode: "8699",
-  },
-  bankTransfer: {
-    accountName: "Kushbhawanpur Sanatan Dharma & Heritage Foundation",
-    bankName: "State Bank of India",
-    accountNumber: "XXXXXXXXXXXX",    // Enter official account number
-    ifscCode: "SBIN0000123",          // Enter official IFSC code
-    branch: "Main Branch, Sultanpur",
-  },
-}
-```
+1. Open `http://localhost:3000/admin`
+2. Default login credentials:
+   - **Email**: `admin@kushbhawanpur.org`
+   - **Password**: `Admin@12345`
+3. Upon first login, the panel will prompt you to set your own secure private password before granting access.
 
 ---
 
-## 📄 License & Attribution
+## 🧪 Unit Tests
 
-All custom code, components, and design implementations are developed for the **Kushbhawanpur Sanatan Dharma & Heritage Foundation**.  
-All religious and cultural symbols are used with solemn reverence and devotion.
+Run the comprehensive unit test suite:
+```bash
+node scripts/run-unit-tests.js
+```
+Validates:
+- Integer paise to rupee conversions and Indian numbering grouping
+- Indian currency words converter (`amountInWords`)
+- Safe video URL parser (YouTube, Vimeo, Google Drive, direct MP4, XSS protection)
+- AES-256-GCM encryption round-trip
+- Dynamic UPI URI builder
+- Indian Financial Year calculations
+
+---
+
+## 📖 Documentation Index
+
+- [Architecture Reference](docs/ARCHITECTURE.md): Technical deep-dive on ISR, database concurrency, and security.
+- [Trustee & Accounts Guide](docs/ADMIN_GUIDE.md): Operational manual for managing content, approving donations, and issuing receipts.
+- [Direct Payments Without Gateway](docs/PAYMENTS_WITHOUT_GATEWAY.md): Complete rationale, UPI QR technical specification, and fraud safeguards.
+- [REST API Reference](docs/API.md): Documentation of all public and administrative REST endpoints.
+- [Assumptions & Boundaries](docs/ASSUMPTIONS.md): Architectural decisions and zero-fake-data policy.
+
+---
+
+## ⚖️ License & Integrity Notice
+
+All cultural narratives, sacred shlokas, and architectural descriptions are dedicated to the preservation of Sanatan cultural heritage in Kushbhawanpur. Built with devotion and precision.
