@@ -1,0 +1,339 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  ACCOUNTS
+  CONTENT
+}
+
+enum DonationStatus {
+  INITIATED
+  PENDING_VERIFICATION
+  VERIFIED
+  REJECTED
+  EXPIRED
+  VOID
+}
+
+enum PaymentMethod {
+  UPI
+  BANK_TRANSFER
+  CHEQUE_DD
+  CASH
+  CSR
+  OTHER
+}
+
+enum QrMode {
+  DYNAMIC
+  STATIC_IMAGE
+}
+
+enum TeamMemberType {
+  FOUNDER
+  CO_FOUNDER
+  TRUSTEE
+  VOLUNTEER
+}
+
+enum VideoProvider {
+  YOUTUBE
+  VIMEO
+  FACEBOOK
+  GOOGLE_DRIVE
+  DIRECT_MP4
+  OTHER
+}
+
+model AdminUser {
+  id                 String       @id @default(uuid())
+  email              String       @unique
+  passwordHash       String
+  role               Role         @default(ACCOUNTS)
+  mustChangePassword Boolean      @default(false)
+  active             Boolean      @default(true)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  verifiedDonations  Donation[]   @relation("VerifiedByAdmin")
+  auditLogs          AuditLog[]
+
+  @@map("admin_users")
+}
+
+model Organization {
+  id                   String   @id @default("singleton")
+  nameEn               String   @default("Kushbhawanpur Sanatan Dharma & Heritage Foundation")
+  nameHi               String   @default("कुशभवनपुर सनातन धर्म एवं हेरिटेज फाउंडेशन")
+  logoUrl              String?  @default("/brand/logo-original.png")
+  taglineEn            String?
+  taglineHi            String?
+  aboutEn              String?
+  visionEn             String?
+  missionEn            String?
+  email                String?
+  phone                String?
+  address              String?
+  regNo                String?
+  panNo                String?
+  approval80G          String?
+  approval12A          String?
+  csrNo                String?
+  darpanId             String?
+  signatoryName        String?
+  signatoryDesignation String?
+  signatureUrl         String?
+  receiptPrefix        String   @default("KSDHF")
+  receiptFooterNote    String?
+  fyStartMonth         Int      @default(4)
+  updatedAt            DateTime @updatedAt
+
+  @@map("organization")
+}
+
+model UpiAccount {
+  id        String   @id @default(uuid())
+  label     String
+  vpa       String
+  payeeName String
+  isPrimary Boolean  @default(false)
+  active    Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("upi_accounts")
+}
+
+model BankAccount {
+  id               String   @id @default(uuid())
+  holder           String
+  accountNumberEnc String
+  ifsc             String
+  bank             String
+  branch           String
+  type             String   @default("Current Account")
+  showPublic       Boolean  @default(true)
+  sortOrder        Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("bank_accounts")
+}
+
+model PaymentSettings {
+  id                  String   @id @default("singleton")
+  qrMode              QrMode   @default(DYNAMIC)
+  staticQrUrl         String?
+  minAmountRupees     Int      @default(10)
+  maxAmountRupees     Int      @default(10000000)
+  presetAmounts       Int[]    @default([501, 1100, 2100, 5100, 11000, 21000])
+  allowUpi            Boolean  @default(true)
+  allowBank           Boolean  @default(true)
+  allowCheque         Boolean  @default(true)
+  allowCsr            Boolean  @default(true)
+  chequePayeeName     String?  @default("Kushbhawanpur Sanatan Dharma & Heritage Foundation")
+  chequeAddress       String?
+  csrContact          String?
+  verificationSlaText String?  @default("Verified within 1-2 working days")
+  updatedAt           DateTime @updatedAt
+
+  @@map("payment_settings")
+}
+
+model Seva {
+  id               String                 @id @default(uuid())
+  slug             String                 @unique
+  titleEn          String
+  titleHi          String
+  description      String
+  suggestedAmounts Int[]
+  imageUrl         String?
+  active           Boolean                @default(true)
+  sortOrder        Int                    @default(0)
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+  donations        Donation[]
+  reminders        ReminderSubscription[]
+
+  @@map("sevas")
+}
+
+model Donor {
+  id         String     @id @default(uuid())
+  name       String
+  email      String
+  phone      String
+  addressEnc String?
+  panEnc     String?
+  consentAt  DateTime   @default(now())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  donations  Donation[]
+
+  @@index([email])
+  @@index([phone])
+  @@map("donors")
+}
+
+model Donation {
+  id                  String         @id @default(uuid())
+  refId               String         @unique
+  donorId             String
+  donor               Donor          @relation(fields: [donorId], references: [id])
+  donorSnapshot       Json
+  amountPaise         BigInt
+  receivedAmountPaise BigInt?
+  sevaId              String
+  seva                Seva           @relation(fields: [sevaId], references: [id])
+  method              PaymentMethod  @default(UPI)
+  utr                 String?
+  paymentAt           DateTime?
+  proofUrl            String?
+  status              DonationStatus @default(INITIATED)
+  source              String         @default("WEB")
+  dedication          String?
+  anonymous           Boolean        @default(false)
+  rejectReason        String?
+  verifiedById        String?
+  verifiedBy          AdminUser?     @relation("VerifiedByAdmin", fields: [verifiedById], references: [id])
+  verifiedAt          DateTime?
+  upiVpaSnapshot      String?
+  tokenHash           String
+  notes               String?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  receipt             Receipt?
+
+  @@index([status, createdAt])
+  @@index([utr])
+  @@index([sevaId])
+  @@map("donations")
+}
+
+model Receipt {
+  id         String    @id @default(uuid())
+  receiptNo  String    @unique
+  fy         String
+  seq        Int
+  donationId String    @unique
+  donation   Donation  @relation(fields: [donationId], references: [id])
+  pdfUrl     String?
+  issuedAt   DateTime  @default(now())
+  voidedAt   DateTime?
+  voidReason String?
+  replacesId String?
+
+  @@index([fy, seq])
+  @@map("receipts")
+}
+
+model ReceiptCounter {
+  id      String @id @default(uuid())
+  fy      String @unique
+  lastSeq Int    @default(0)
+
+  @@map("receipt_counters")
+}
+
+model TeamMember {
+  id          String         @id @default(uuid())
+  type        TeamMemberType @default(VOLUNTEER)
+  nameEn      String
+  nameHi      String?
+  designation String
+  photoUrl    String?
+  bio         String?
+  socialLinks Json?
+  sortOrder   Int            @default(0)
+  active      Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@map("team_members")
+}
+
+model Certification {
+  id        String    @id @default(uuid())
+  title     String
+  issuer    String
+  number    String?
+  issueDate DateTime?
+  fileUrl   String
+  thumbUrl  String?
+  sortOrder Int       @default(0)
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("certifications")
+}
+
+model Video {
+  id          String        @id @default(uuid())
+  title       String
+  sourceUrl   String
+  provider    VideoProvider @default(YOUTUBE)
+  videoId     String?
+  embedUrl    String
+  thumbUrl    String?
+  description String?
+  category    String        @default("Heritage")
+  featured    Boolean       @default(false)
+  sortOrder   Int           @default(0)
+  published   Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("videos")
+}
+
+model Milestone {
+  id        String   @id @default(uuid())
+  year      String
+  title     String
+  text      String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("milestones")
+}
+
+model AuditLog {
+  id        String     @id @default(uuid())
+  actorId   String?
+  actor     AdminUser? @relation(fields: [actorId], references: [id])
+  action    String
+  entity    String
+  entityId  String?
+  meta      Json?
+  ip        String?
+  userAgent String?
+  createdAt DateTime   @default(now())
+
+  @@index([entity, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model ReminderSubscription {
+  id           String   @id @default(uuid())
+  name         String
+  email        String
+  phone        String
+  sevaId       String?
+  seva         Seva?    @relation(fields: [sevaId], references: [id])
+  preferredDay Int      @default(1)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("reminder_subscriptions")
+}
