@@ -56,7 +56,49 @@ This document records the architectural, cultural, and technical design decision
 
 1. **Incremental Static Regeneration (ISR) with Graceful Offline Fallback**:
    - `output: 'export'` was removed from Next.js to enable server-side ISR (`revalidate: 60`).
-   - If the API or PostgreSQL database is ever offline, `lib/api.ts` gracefully serves fallback data from `content/site.config.ts`. The public page never breaks.
+   - If the API or PostgreSQL database is ever offline, `lib/api.ts` gracefully serves fallback data from `content/defaults.ts` and `content/site.config.ts`. The public page never breaks.
+
+---
+
+### 7. Supabase Storage & Media Asset Management
+- **Cloudinary Replaced**: Replaced Cloudinary with a dedicated public Supabase Storage bucket (`kushbhawanpur-media`) on project `https://racqnmwrulqqvqjcsxfn.supabase.co`.
+- **Client & Upload Transport**: Uses `@supabase/storage-js` via `StorageService` to execute direct REST stream uploads, avoiding native WebSocket incompatibilities in Node.js 20 runtimes.
+- **Media Asset Registry**: Every upload is indexed in `MediaAsset` with kind (`IMAGE` or `DOCUMENT`), dimensions, MIME type, size, public CDN URL, alt text, and caption.
+- **Reference Tracking**: `MediaUsage` records the exact entity and field using each asset. The Media Library indicates active usage count and prevents accidental deletion of in-use assets unless explicitly forced by the admin.
+
+---
+
+### 8. Structured Schema-Driven CMS Architecture
+- **Draft → Publish Workflow**:
+  - Each public section has a `PageSection` record with `draftContent` and `publishedContent` JSONB fields.
+  - Changes made in the admin save immediately to `draftContent`.
+  - "Publish to Website" promotes `draftContent` to `publishedContent` in a transaction, creates a timestamped `PageSectionVersion` snapshot (retaining up to 20 historical versions for instant rollback), and revalidates cached content.
+  - "Revert to Published" discards draft changes and restores the live version.
+- **Relational Tables for Repeating Data**:
+  - Structured entities (`hero_slides`, `trust_items`, `value_pillars`, `focus_areas`, `story_chapters`, `impact_items`, `donor_benefits`, `gallery_items`, `involve_cards`, `faq_items`, `nav_items`, `announcements`) allow granular sorting, activation toggles, and soft-deletes.
+- **Story Chapter Hotspot Picker**:
+  - Interactive emblem targeting tool (`HotspotPicker`) lets administrators click directly on the foundation emblem to set percentage coordinates (`hotspotX`, `hotspotY`, `hotspotRadius`) with live radius zoom controls.
+
+---
+
+### 9. Delete Confirmation & Financial Immutability Boundaries
+- **Universal Confirmation**: Every delete, void, or removal action across all modules triggers `ConfirmDialog` / `useConfirm()`.
+- **Risk Tiers**:
+  - *Standard*: Confirmation dialog explaining consequence.
+  - *High-Risk*: Requires typing `DELETE` or the item name to activate the destructive button (used for primary UPI account removal, permanently deleting trash, disabling admins, and deleting in-use media assets).
+- **Financial Record Immutability**:
+  - Financial records (`donations`, `receipts`, donors with transactions, audit logs) can **never** be hard-deleted.
+  - The API and UI strictly forbid deletion and offer `VOID` or `REJECT` with mandatory reason documentation.
+- **Soft Delete & 30-Day Trash**:
+  - Content models have `deletedAt: DateTime?`. Soft-deleted items move to `/admin/trash` with a 10-second undo toast, one-click restore, and permanent deletion with typed confirmation.
+
+---
+
+### 10. Admin UI Modernization
+- **Scrollbar Affordance**: Thin, 7px rounded, brand-tinted scrollbars (`#D4A02C` track hover, `scrollbar-gutter: stable`) applied globally across admin sidebars, tables, modals, and lists.
+- **Searchable Comboboxes**: Replaced native `<select>` controls with custom Radix-based searchable dropdowns supporting keyboard navigation and touch-friendly mobile drawers.
+- **Unified Media Uploader**: Drag-and-drop zone with clipboard paste support, crop dialog (`react-easy-crop`), per-file upload progress bar, and "Replace with Undo" capabilities.
+
 
 2. **Direct Payments Without Payment Gateways**:
    - Commercial gateway intermediaries (charging 2%+ fees) are excluded.
