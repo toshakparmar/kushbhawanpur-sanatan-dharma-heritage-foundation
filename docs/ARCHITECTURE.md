@@ -17,7 +17,7 @@ The codebase is organized as an npm workspaces monorepo:
 │       │   ├── common/         # Encryption, PDF generator, Mailer, Storage, Guards, Filters
 │       │   ├── modules/        # Auth, Public, Donations, Sevas, Team, Certs, Videos, etc.
 │       │   └── prisma/         # Prisma schema, seeds, migrations
-│       └── uploads/            # Local disk storage for development (S3/Cloudinary ready)
+│       └── uploads/            # Local disk storage for development (Supabase Storage / S3 ready)
 │
 ├── packages/
 │   └── shared/                 # Shared TypeScript models, Zod schemas, money & words helpers
