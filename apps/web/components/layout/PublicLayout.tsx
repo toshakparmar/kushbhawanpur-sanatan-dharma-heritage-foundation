@@ -2,6 +2,7 @@
 
 import React from "react";
 import { usePathname } from "next/navigation";
+import { MotionConfig } from "framer-motion";
 import { ScrollProgress } from "@/components/layout/ScrollProgress";
 import { UtilityBar } from "@/components/layout/UtilityBar";
 import { Header } from "@/components/layout/Header";
@@ -17,7 +18,7 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <>
+    <MotionConfig reducedMotion="never">
       <ScrollProgress />
       <UtilityBar />
       <Header />
@@ -26,6 +27,6 @@ export function PublicLayout({ children }: { children: React.ReactNode }) {
       </main>
       <Footer />
       <StickyDonateBar />
-    </>
+    </MotionConfig>
   );
 }

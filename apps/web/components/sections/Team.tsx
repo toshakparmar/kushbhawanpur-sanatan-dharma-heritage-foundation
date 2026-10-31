@@ -2,7 +2,8 @@
 
 import React, { useRef } from "react";
 import Image from "next/image";
-import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useSafeReducedMotion } from "@/lib/use-safe-reduced-motion";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { Users, HeartHandshake, ShieldCheck, ExternalLink } from "lucide-react";
 
@@ -23,7 +24,7 @@ interface TeamProps {
 
 function LeaderCard({ member }: { member: TeamMember }) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const shouldReduceMotion = useReducedMotion();
+  const shouldReduceMotion = useSafeReducedMotion();
 
   // 3D tilt springs
   const x = useMotionValue(0);

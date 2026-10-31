@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useSafeReducedMotion } from "@/lib/use-safe-reduced-motion";
 import { STORY_CONTENT, StoryChapterData } from "@/content/story";
 import { HOTSPOT_RING_TRANSITION, getEmblemTransform } from "@/lib/story-motion";
 import { StoryProgressRail } from "./StoryProgressRail";
@@ -19,7 +20,7 @@ export function StoryEmblem({
   isTabletStrip = false
 }: StoryEmblemProps) {
   const currentChapter = STORY_CONTENT.chapters[activeIndex] || STORY_CONTENT.chapters[0];
-  const prefersReduced = useReducedMotion();
+  const prefersReduced = useSafeReducedMotion();
   const [mounted, setMounted] = useState(false);
   const [debugHotspots, setDebugHotspots] = useState(false);
 

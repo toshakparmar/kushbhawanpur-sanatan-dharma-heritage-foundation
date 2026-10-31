@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useSafeReducedMotion } from "@/lib/use-safe-reduced-motion";
 import { STORY_CONTENT } from "@/content/story";
 import { StoryEmblem } from "./StoryEmblem";
 import { StoryChapter } from "./StoryChapter";
@@ -12,7 +13,7 @@ import { cn } from "@/lib/utils";
 export function Story() {
   const [activeChapterIndex, setActiveChapterIndex] = useState(0);
   const chapterRefs = useRef<(HTMLElement | null)[]>([]);
-  const prefersReduced = useReducedMotion();
+  const prefersReduced = useSafeReducedMotion();
 
   // Precise viewport-centered scroll spy for chapters
   useEffect(() => {

@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useSafeReducedMotion } from "@/lib/use-safe-reduced-motion";
 import { STORY_CONTENT } from "@/content/story";
 import { StorySymbolIcon } from "./icons";
 import { Magnet } from "@/components/reactbits/Magnet";
@@ -10,7 +11,7 @@ import { GOMTI_RIVER_SVG_PATH } from "@/lib/story-motion";
 
 export function StoryClosing() {
   const closing = STORY_CONTENT.closing;
-  const prefersReduced = useReducedMotion();
+  const prefersReduced = useSafeReducedMotion();
   const [mounted, setMounted] = useState(false);
 
   React.useEffect(() => {
