@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { adminFetch } from "@/lib/admin-api";
 import { Lock, Mail, KeyRound, ShieldAlert, CheckCircle2 } from "lucide-react";
@@ -213,6 +214,19 @@ export default function AdminLoginPage() {
               </button>
             </form>
           )}
+        </div>
+
+        {/* Footer info for Login */}
+        <div className="mt-6 text-center space-y-2">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-xs font-serif font-semibold text-maroon hover:text-saffron-deep transition-colors"
+          >
+            <span>← Return to Public Website</span>
+          </Link>
+          <p className="text-[11px] text-ink-muted/80 font-sans">
+            © {new Date().getFullYear()} Kushbhawanpur Sanatan Dharma & Heritage Foundation · Authorized Personnel Only
+          </p>
         </div>
       </div>
     </div>

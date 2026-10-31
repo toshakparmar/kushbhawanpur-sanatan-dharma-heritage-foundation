@@ -252,6 +252,29 @@ export default function AdminPanelLayout({
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
           {children}
         </main>
+
+        {/* Admin Panel Footer */}
+        <footer className="mt-auto border-t border-gold/30 bg-paper/60 px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-xs text-ink-muted/80 gap-2">
+          <span>
+            © {new Date().getFullYear()} Kushbhawanpur Sanatan Dharma & Heritage Foundation · Secure Admin Management Portal
+          </span>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/"
+              target="_blank"
+              className="hover:text-maroon transition-colors"
+            >
+              Public Website
+            </Link>
+            <span>·</span>
+            <Link
+              href="/admin/audit-log"
+              className="hover:text-maroon transition-colors"
+            >
+              Audit Trail
+            </Link>
+          </div>
+        </footer>
       </div>
     </div>
   );

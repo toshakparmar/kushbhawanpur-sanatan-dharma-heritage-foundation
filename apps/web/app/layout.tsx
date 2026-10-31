@@ -3,11 +3,7 @@ import { Cormorant_Garamond, Manrope, Noto_Serif_Devanagari } from "next/font/go
 import "./globals.css";
 import { siteConfig } from "@/content/site.config";
 import { Toaster } from "@/components/ui/sonner";
-import { ScrollProgress } from "@/components/layout/ScrollProgress";
-import { UtilityBar } from "@/components/layout/UtilityBar";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { StickyDonateBar } from "@/components/layout/StickyDonateBar";
+import { PublicLayout } from "@/components/layout/PublicLayout";
 
 const cormorant = Cormorant_Garamond({
   weight: ["600", "700"],
@@ -156,16 +152,9 @@ export default function RootLayout({
           Skip to main content
         </a>
 
-        <ScrollProgress />
-        <UtilityBar />
-        <Header />
-
-        <main id="main-content" className="flex-1">
+        <PublicLayout>
           {children}
-        </main>
-
-        <Footer />
-        <StickyDonateBar />
+        </PublicLayout>
         <Toaster position="top-right" />
       </body>
     </html>
