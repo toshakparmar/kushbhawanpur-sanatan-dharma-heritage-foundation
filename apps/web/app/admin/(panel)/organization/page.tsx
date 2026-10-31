@@ -2,90 +2,90 @@
 
 import React, { useState, useEffect } from "react";
 import { adminFetch } from "@/lib/admin-api";
-import { Building, Save, ShieldCheck, CheckCircle2, Upload } from "lucide-react";
+import { Building, Save, ShieldCheck, CheckCircle2, Sparkles, FileSignature } from "lucide-react";
 import { toast } from "sonner";
+import { MediaUploader } from "@/components/admin/ui/MediaUploader";
 
-export default function OrganizationProfilePage() {
-  const [profile, setProfile] = useState<any>({});
+export default function OrganizationAdminPage() {
+  const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    adminFetch("/admin/organization")
-      .then((data) => {
-        if (data) setProfile(data);
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    const loadProfile = async () => {
+      try {
+        const data = await adminFetch("/admin/organization");
+        setProfile(data || {});
+      } catch (err: any) {
+        toast.error(err.message || "Failed to load organization settings.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadProfile();
   }, []);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     try {
-      const res = await adminFetch("/admin/organization", {
+      await adminFetch("/admin/organization", {
         method: "PUT",
         body: JSON.stringify(profile),
       });
-      setProfile(res);
-      toast.success("Organisation profile and receipt settings updated!");
+      toast.success("Organization details and statutory accreditations updated.");
     } catch (err: any) {
-      toast.error(err.message || "Failed to update profile.");
+      toast.error(err.message || "Save failed.");
     } finally {
       setSaving(false);
     }
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const res = await fetch("/api/admin/media/upload", {
-        method: "POST",
-        body: formData,
-        credentials: "include",
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error?.message || "Upload failed");
-      const url = json.data?.url || json.url;
-      setProfile((prev: any) => ({ ...prev, [field]: url }));
-      toast.success("Image uploaded successfully!");
-    } catch (err: any) {
-      toast.error(err.message || "Upload error.");
-    }
-  };
-
   if (loading) {
-    return <div className="p-8 text-center text-ink-muted">Loading profile...</div>;
+    return (
+      <div className="space-y-6">
+        <div className="h-10 w-64 bg-sand/30 rounded-xl animate-pulse" />
+        <div className="h-96 rounded-3xl bg-sand/20 border border-sand animate-pulse" />
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-12">
       {/* Title */}
-      <div>
-        <h1 className="font-serif text-2xl sm:text-3xl font-bold text-maroon flex items-center gap-2">
-          <Building className="w-7 h-7 text-maroon" />
-          <span>Organisation Profile & Receipt Settings</span>
-        </h1>
-        <p className="text-xs text-ink-muted">
-          Manage foundation public details, statutory registrations (80G/12A), authorised signatory, and digital receipt templates.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-maroon flex items-center gap-2.5">
+            <Building className="w-7 h-7 text-maroon" />
+            <span>Organization Profile & Statutory Settings</span>
+          </h1>
+          <p className="text-xs text-ink/70 mt-1">
+            Foundation identity, 12A/80G approvals, CSR registration, and official receipt parameters.
+          </p>
+        </div>
+
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          type="button"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-maroon hover:bg-maroon-deep text-cream font-serif font-bold text-xs shadow-xs transition-colors disabled:opacity-50"
+        >
+          <Save className="w-4 h-4 text-gold" />
+          <span>{saving ? "Saving..." : "Save Changes"}</span>
+        </button>
       </div>
 
-      <form onSubmit={handleSave} className="space-y-8">
-        {/* Section 1: Identity & Names */}
-        <div className="rounded-3xl bg-paper p-6 sm:p-8 border border-gold/40 shadow-xs space-y-4">
-          <h2 className="font-serif text-lg font-bold text-maroon border-b border-border pb-2">
-            1. Foundation Identity (Bilingual)
+      <form onSubmit={handleSave} className="space-y-6">
+        {/* Section 1: Identity & Brand Logos */}
+        <div className="rounded-3xl bg-paper p-6 sm:p-8 border border-sand shadow-xs space-y-5">
+          <h2 className="font-serif text-base font-bold text-maroon border-b border-sand pb-2.5 flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-gold" />
+            <span>1. Foundation Identity & Brand Media</span>
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-maroon mb-1">
+              <label className="block text-xs font-semibold text-ink mb-1.5">
                 Foundation Name (English) *
               </label>
               <input
@@ -93,270 +93,289 @@ export default function OrganizationProfilePage() {
                 required
                 value={profile.nameEn || ""}
                 onChange={(e) => setProfile({ ...profile, nameEn: e.target.value })}
-                className="w-full px-3.5 py-2 rounded-xl border border-border text-xs focus:ring-2 focus:ring-gold"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-sand bg-paper text-xs text-ink focus:border-gold focus:outline-hidden focus:ring-1 focus:ring-gold"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-maroon mb-1">
+              <label className="block text-xs font-semibold text-ink mb-1.5">
                 Foundation Name (Hindi / Devanagari)
               </label>
               <input
                 type="text"
                 value={profile.nameHi || ""}
                 onChange={(e) => setProfile({ ...profile, nameHi: e.target.value })}
-                className="w-full px-3.5 py-2 rounded-xl border border-border text-xs font-hindi focus:ring-2 focus:ring-gold"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-sand bg-paper text-xs font-hindi text-ink focus:border-gold focus:outline-hidden focus:ring-1 focus:ring-gold"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-maroon mb-1">
+              <label className="block text-xs font-semibold text-ink mb-1.5">
                 Tagline (English)
               </label>
               <input
                 type="text"
                 value={profile.taglineEn || ""}
                 onChange={(e) => setProfile({ ...profile, taglineEn: e.target.value })}
-                className="w-full px-3.5 py-2 rounded-xl border border-border text-xs focus:ring-2 focus:ring-gold"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-sand bg-paper text-xs text-ink focus:border-gold focus:outline-hidden focus:ring-1 focus:ring-gold"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-maroon mb-1">
+              <label className="block text-xs font-semibold text-ink mb-1.5">
                 Tagline (Hindi)
               </label>
               <input
                 type="text"
                 value={profile.taglineHi || ""}
                 onChange={(e) => setProfile({ ...profile, taglineHi: e.target.value })}
-                className="w-full px-3.5 py-2 rounded-xl border border-border text-xs font-hindi focus:ring-2 focus:ring-gold"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-sand bg-paper text-xs font-hindi text-ink focus:border-gold focus:outline-hidden focus:ring-1 focus:ring-gold"
               />
             </div>
           </div>
 
+          {/* Official Logo Uploader */}
+          <div className="pt-2">
+            <MediaUploader
+              label="Official Foundation Logo"
+              helperText="Upload transparent PNG or SVG logo. Direct upload to Supabase storage bucket."
+              aspectRatio={1}
+              allowCrop={true}
+              value={profile.logoUrl}
+              onChange={(url) => setProfile({ ...profile, logoUrl: url })}
+              onRemove={() => setProfile({ ...profile, logoUrl: "" })}
+            />
+          </div>
+
           <div>
-            <label className="block text-xs font-bold text-maroon mb-1">
+            <label className="block text-xs font-semibold text-ink mb-1.5">
               About Foundation (Paragraphs)
             </label>
             <textarea
               rows={3}
               value={profile.aboutEn || ""}
               onChange={(e) => setProfile({ ...profile, aboutEn: e.target.value })}
-              className="w-full p-3 rounded-xl border border-border text-xs leading-relaxed focus:ring-2 focus:ring-gold"
+              className="w-full p-3.5 rounded-xl border border-sand bg-paper text-xs text-ink focus:border-gold focus:outline-hidden focus:ring-1 focus:ring-gold leading-relaxed"
             />
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-bold text-maroon mb-1">Vision Statement</label>
-              <textarea
-                rows={2}
-                value={profile.visionEn || ""}
-                onChange={(e) => setProfile({ ...profile, visionEn: e.target.value })}
-                className="w-full p-3 rounded-xl border border-border text-xs focus:ring-2 focus:ring-gold"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-maroon mb-1">Mission Statement</label>
-              <textarea
-                rows={2}
-                value={profile.missionEn || ""}
-                onChange={(e) => setProfile({ ...profile, missionEn: e.target.value })}
-                className="w-full p-3 rounded-xl border border-border text-xs focus:ring-2 focus:ring-gold"
-              />
-            </div>
-          </div>
         </div>
 
-        {/* Section 2: Contact & Official Address */}
-        <div className="rounded-3xl bg-paper p-6 sm:p-8 border border-gold/40 shadow-xs space-y-4">
-          <h2 className="font-serif text-lg font-bold text-maroon border-b border-border pb-2">
-            2. Official Contacts & Registered Office
+        {/* Section 2: Statutory & Tax Approvals */}
+        <div className="rounded-3xl bg-paper p-6 sm:p-8 border border-sand shadow-xs space-y-5">
+          <h2 className="font-serif text-base font-bold text-maroon border-b border-sand pb-2.5 flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-banyan" />
+            <span>2. Statutory Registrations & Tax Exemption Numbers</span>
           </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-xs font-bold text-maroon mb-1">Official Email</label>
-              <input
-                type="email"
-                value={profile.email || ""}
-                onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-border text-xs font-mono"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-maroon mb-1">Official Phone</label>
-              <input
-                type="text"
-                value={profile.phone || ""}
-                onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-border text-xs font-mono"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-maroon mb-1">Registered Address</label>
-              <input
-                type="text"
-                value={profile.address || ""}
-                onChange={(e) => setProfile({ ...profile, address: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-border text-xs"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Section 3: Statutory Approvals (80G, 12A, Reg, PAN) */}
-        <div className="rounded-3xl bg-paper p-6 sm:p-8 border border-gold/40 shadow-xs space-y-4">
-          <div className="border-b border-border pb-2 flex items-center justify-between">
-            <h2 className="font-serif text-lg font-bold text-maroon">
-              3. Statutory Approvals & Tax Exemptions
-            </h2>
-            <span className="text-[11px] text-ink-muted">
-              Appears on receipts only if filled.
-            </span>
-          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-bold text-maroon mb-1">Trust Registration No.</label>
+              <label className="block text-xs font-semibold text-ink mb-1.5">
+                Permanent Account Number (PAN) *
+              </label>
               <input
                 type="text"
-                placeholder="Optional"
-                value={profile.regNo || ""}
-                onChange={(e) => setProfile({ ...profile, regNo: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-border text-xs font-mono"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-maroon mb-1">Trust PAN Number</label>
-              <input
-                type="text"
-                placeholder="Optional"
+                required
                 value={profile.panNo || ""}
                 onChange={(e) => setProfile({ ...profile, panNo: e.target.value.toUpperCase() })}
-                className="w-full px-3 py-2 rounded-xl border border-border text-xs font-mono uppercase"
+                className="w-full px-3.5 py-2 rounded-xl border border-sand bg-paper text-xs font-mono uppercase text-ink focus:border-gold focus:outline-hidden"
+                placeholder="AAATK1234F"
               />
             </div>
+
             <div>
-              <label className="block text-xs font-bold text-maroon mb-1">Section 80G Approval No.</label>
+              <label className="block text-xs font-semibold text-ink mb-1.5">
+                Trust Registration Number
+              </label>
               <input
                 type="text"
-                placeholder="Optional (Never claim if blank)"
+                value={profile.regNo || ""}
+                onChange={(e) => setProfile({ ...profile, regNo: e.target.value })}
+                className="w-full px-3.5 py-2 rounded-xl border border-sand bg-paper text-xs font-mono text-ink focus:border-gold focus:outline-hidden"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-ink mb-1.5">
+                Section 80G Approval Number
+              </label>
+              <input
+                type="text"
                 value={profile.approval80G || ""}
                 onChange={(e) => setProfile({ ...profile, approval80G: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-border text-xs font-mono"
+                className="w-full px-3.5 py-2 rounded-xl border border-sand bg-paper text-xs font-mono text-ink focus:border-gold focus:outline-hidden"
               />
             </div>
+
             <div>
-              <label className="block text-xs font-bold text-maroon mb-1">Section 12A Registration No.</label>
+              <label className="block text-xs font-semibold text-ink mb-1.5">
+                Section 12A Registration Number
+              </label>
               <input
                 type="text"
-                placeholder="Optional"
                 value={profile.approval12A || ""}
                 onChange={(e) => setProfile({ ...profile, approval12A: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-border text-xs font-mono"
+                className="w-full px-3.5 py-2 rounded-xl border border-sand bg-paper text-xs font-mono text-ink focus:border-gold focus:outline-hidden"
               />
             </div>
+
             <div>
-              <label className="block text-xs font-bold text-maroon mb-1">NITI Aayog Darpan ID</label>
+              <label className="block text-xs font-semibold text-ink mb-1.5">
+                MCA CSR Registration Number
+              </label>
               <input
                 type="text"
-                placeholder="Optional"
+                value={profile.csrNo || ""}
+                onChange={(e) => setProfile({ ...profile, csrNo: e.target.value })}
+                className="w-full px-3.5 py-2 rounded-xl border border-sand bg-paper text-xs font-mono text-ink focus:border-gold focus:outline-hidden"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-ink mb-1.5">
+                NITI Aayog Darpan ID
+              </label>
+              <input
+                type="text"
                 value={profile.darpanId || ""}
                 onChange={(e) => setProfile({ ...profile, darpanId: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-border text-xs font-mono"
+                className="w-full px-3.5 py-2 rounded-xl border border-sand bg-paper text-xs font-mono text-ink focus:border-gold focus:outline-hidden"
               />
             </div>
           </div>
         </div>
 
-        {/* Section 4: Authorised Signatory & Receipt Templates */}
-        <div className="rounded-3xl bg-paper p-6 sm:p-8 border border-gold/40 shadow-xs space-y-4">
-          <h2 className="font-serif text-lg font-bold text-maroon border-b border-border pb-2">
-            4. Authorised Signatory & Digital Receipt Template
+        {/* Section 3: Official Receipt Signatory */}
+        <div className="rounded-3xl bg-paper p-6 sm:p-8 border border-sand shadow-xs space-y-5">
+          <h2 className="font-serif text-base font-bold text-maroon border-b border-sand pb-2.5 flex items-center gap-2">
+            <FileSignature className="w-4 h-4 text-saffron" />
+            <span>3. Automated 80G Receipt & Signatory Configuration</span>
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-maroon mb-1">Signatory Name</label>
+              <label className="block text-xs font-semibold text-ink mb-1.5">
+                Authorized Signatory Name
+              </label>
               <input
                 type="text"
-                placeholder="e.g. Swami / Trustee Name"
                 value={profile.signatoryName || ""}
                 onChange={(e) => setProfile({ ...profile, signatoryName: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-border text-xs"
+                className="w-full px-3.5 py-2 rounded-xl border border-sand bg-paper text-xs text-ink focus:border-gold focus:outline-hidden"
+                placeholder="e.g. Managing Trustee"
               />
             </div>
-            <div>
-              <label className="block text-xs font-bold text-maroon mb-1">Signatory Designation</label>
-              <input
-                type="text"
-                placeholder="e.g. Managing Trustee / Treasurer"
-                value={profile.signatoryDesignation || ""}
-                onChange={(e) => setProfile({ ...profile, signatoryDesignation: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-border text-xs"
-              />
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-maroon mb-1">Receipt Prefix</label>
+              <label className="block text-xs font-semibold text-ink mb-1.5">
+                Signatory Designation
+              </label>
               <input
                 type="text"
-                required
-                value={profile.receiptPrefix || "KSDHF"}
-                onChange={(e) => setProfile({ ...profile, receiptPrefix: e.target.value.toUpperCase() })}
-                className="w-full px-3 py-2 rounded-xl border border-border text-xs font-mono uppercase"
+                value={profile.signatoryDesignation || ""}
+                onChange={(e) =>
+                  setProfile({ ...profile, signatoryDesignation: e.target.value })
+                }
+                className="w-full px-3.5 py-2 rounded-xl border border-sand bg-paper text-xs text-ink focus:border-gold focus:outline-hidden"
+                placeholder="Managing Trustee / General Secretary"
               />
-              <span className="text-[11px] text-ink-muted">
-                Generates e.g. {profile.receiptPrefix || "KSDHF"}/2026-27/00001
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-ink mb-1.5">
+                Receipt Prefix Code
+              </label>
+              <input
+                type="text"
+                value={profile.receiptPrefix || "KSDHF"}
+                onChange={(e) => setProfile({ ...profile, receiptPrefix: e.target.value })}
+                className="w-full px-3.5 py-2 rounded-xl border border-sand bg-paper text-xs font-mono uppercase text-ink focus:border-gold focus:outline-hidden"
+              />
+              <span className="text-[11px] text-ink/50 mt-1 block">
+                Generates receipts like: {profile.receiptPrefix || "KSDHF"}/2026-27/00001
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-maroon mb-1">
-                Upload Digital Signature (PNG, Transparent)
+              <label className="block text-xs font-semibold text-ink mb-1.5">
+                Receipt Footer Note
               </label>
-              <div className="flex items-center gap-3">
-                <input
-                  type="file"
-                  accept="image/png,image/jpeg"
-                  onChange={(e) => handleFileUpload(e, "signatureUrl")}
-                  className="text-xs text-ink-muted"
-                />
-                {profile.signatureUrl && (
-                  <span className="text-[11px] text-green-700 font-bold flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    Uploaded
-                  </span>
-                )}
-              </div>
+              <input
+                type="text"
+                value={profile.receiptFooterNote || ""}
+                onChange={(e) =>
+                  setProfile({ ...profile, receiptFooterNote: e.target.value })
+                }
+                className="w-full px-3.5 py-2 rounded-xl border border-sand bg-paper text-xs text-ink focus:border-gold focus:outline-hidden"
+                placeholder="This is a computer-generated 80G donation receipt."
+              />
             </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-bold text-maroon mb-1">
-              Receipt Footer Note
-            </label>
-            <input
-              type="text"
-              value={profile.receiptFooterNote || ""}
-              onChange={(e) => setProfile({ ...profile, receiptFooterNote: e.target.value })}
-              className="w-full px-3 py-2 rounded-xl border border-border text-xs"
+          {/* Digital Signature Upload via MediaUploader */}
+          <div className="pt-2">
+            <MediaUploader
+              label="Digital Signature for Official PDF Receipts"
+              helperText="Upload transparent PNG of the authorized signatory's signature. Automatically embedded into generated 80G PDF receipts."
+              accept="image/png,image/jpeg"
+              allowCrop={false}
+              value={profile.signatureUrl}
+              onChange={(url) => setProfile({ ...profile, signatureUrl: url })}
+              onRemove={() => setProfile({ ...profile, signatureUrl: "" })}
             />
           </div>
         </div>
 
-        {/* Submit */}
-        <div className="flex justify-end">
+        {/* Section 4: Public Contact & Address */}
+        <div className="rounded-3xl bg-paper p-6 sm:p-8 border border-sand shadow-xs space-y-4">
+          <h2 className="font-serif text-base font-bold text-maroon border-b border-sand pb-2.5">
+            4. Registered Office & Contact Details
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-ink mb-1.5">Official Email</label>
+              <input
+                type="email"
+                value={profile.email || ""}
+                onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                className="w-full px-3.5 py-2 rounded-xl border border-sand bg-paper text-xs text-ink focus:border-gold focus:outline-hidden"
+                placeholder="contact@kushbhawanpur.org"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-ink mb-1.5">Official Phone / Helpline</label>
+              <input
+                type="text"
+                value={profile.phone || ""}
+                onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                className="w-full px-3.5 py-2 rounded-xl border border-sand bg-paper text-xs text-ink focus:border-gold focus:outline-hidden"
+                placeholder="+91 94150 XXXXX"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-ink mb-1.5">Registered Office Address</label>
+            <textarea
+              rows={2}
+              value={profile.address || ""}
+              onChange={(e) => setProfile({ ...profile, address: e.target.value })}
+              className="w-full p-3.5 rounded-xl border border-sand bg-paper text-xs text-ink focus:border-gold focus:outline-hidden leading-relaxed"
+              placeholder="Dhopap Ghat, Sultanpur (Kushbhawanpur), Uttar Pradesh - 228001"
+            />
+          </div>
+        </div>
+
+        {/* Sticky Save Bar */}
+        <div className="flex justify-end pt-4">
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-maroon text-cream font-serif font-bold text-sm hover:bg-maroon-dark transition-all shadow-md disabled:opacity-50 cursor-pointer"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-maroon hover:bg-maroon-deep text-cream font-serif font-bold text-sm shadow-sm transition-colors disabled:opacity-50"
           >
             <Save className="w-4 h-4 text-gold" />
-            <span>{saving ? "Saving Changes..." : "Save Organisation Settings"}</span>
+            <span>{saving ? "Saving All Settings..." : "Save Organization Profile"}</span>
           </button>
         </div>
       </form>

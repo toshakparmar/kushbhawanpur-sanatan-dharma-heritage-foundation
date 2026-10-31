@@ -5,6 +5,7 @@ import { adminFetch } from "@/lib/admin-api";
 import { CreditCard, Plus, Trash2, CheckCircle2, Save, QrCode } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useConfirm } from "@/components/admin/ui/ConfirmDialog";
 
 export default function PaymentSettingsPage() {
   const [settings, setSettings] = useState<any>({});
@@ -94,10 +95,26 @@ export default function PaymentSettingsPage() {
     }
   };
 
-  const handleDeleteUpi = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this UPI account?")) return;
+  const { confirm, ConfirmComponent } = useConfirm();
+
+  const handleDeleteUpi = async (account: any) => {
+    const isConfirmed = await confirm({
+      title: "Delete UPI Account?",
+      description: `Are you sure you want to delete ${account.label} (${account.vpa})?`,
+      consequenceText: account.isPrimary
+        ? "CRITICAL: This is your PRIMARY receiving UPI ID. Deleting it will prevent dynamic UPI QR generation until another account is made primary."
+        : "This UPI ID will no longer be available for donation receipts.",
+      itemName: account.vpa,
+      highRisk: account.isPrimary,
+      confirmMatchText: account.isPrimary ? "DELETE" : undefined,
+      confirmLabel: "Delete UPI Account",
+      variant: "danger",
+    });
+
+    if (!isConfirmed) return;
+
     try {
-      await adminFetch(`/admin/upi-accounts/${id}`, { method: "DELETE" });
+      await adminFetch(`/admin/upi-accounts/${account.id}`, { method: "DELETE" });
       toast.success("UPI account deleted.");
       loadData();
     } catch (err: any) {
@@ -132,10 +149,20 @@ export default function PaymentSettingsPage() {
     }
   };
 
-  const handleDeleteBank = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this bank account?")) return;
+  const handleDeleteBank = async (account: any) => {
+    const isConfirmed = await confirm({
+      title: "Delete Bank Account?",
+      description: `Are you sure you want to delete the ${account.bank} account?`,
+      consequenceText: "This account details will be removed from the public Direct Bank Transfer section immediately.",
+      itemName: `${account.bank} (${account.accountNumberMasked})`,
+      confirmLabel: "Delete Account",
+      variant: "danger",
+    });
+
+    if (!isConfirmed) return;
+
     try {
-      await adminFetch(`/admin/bank-accounts/${id}`, { method: "DELETE" });
+      await adminFetch(`/admin/bank-accounts/${account.id}`, { method: "DELETE" });
       toast.success("Bank account deleted.");
       loadData();
     } catch (err: any) {
@@ -149,6 +176,8 @@ export default function PaymentSettingsPage() {
 
   return (
     <div className="space-y-8">
+      {ConfirmComponent}
+
       {/* Title */}
       <div>
         <h1 className="font-serif text-2xl sm:text-3xl font-bold text-maroon flex items-center gap-2">
@@ -208,7 +237,7 @@ export default function PaymentSettingsPage() {
 
               <button
                 type="button"
-                onClick={() => handleDeleteUpi(upi.id)}
+                onClick={() => handleDeleteUpi(upi)}
                 className="p-1.5 rounded-lg text-ink-muted hover:text-red-700 hover:bg-red-50"
               >
                 <Trash2 className="w-4 h-4" />
@@ -258,7 +287,7 @@ export default function PaymentSettingsPage() {
               </div>
               <button
                 type="button"
-                onClick={() => handleDeleteBank(bank.id)}
+                onClick={() => handleDeleteBank(bank)}
                 className="p-1.5 rounded-lg text-ink-muted hover:text-red-700 hover:bg-red-50"
               >
                 <Trash2 className="w-4 h-4" />
