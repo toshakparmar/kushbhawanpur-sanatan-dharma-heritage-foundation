@@ -50,7 +50,7 @@ async function bootstrap() {
 
   // Global prefixes, pipes, filters, interceptors
   app.setGlobalPrefix('api/v1', {
-    exclude: ['uploads/(.*)'],
+    exclude: ['uploads/{*path}'],
   });
 
   app.useGlobalPipes(

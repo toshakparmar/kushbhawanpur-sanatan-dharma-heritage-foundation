@@ -38,7 +38,7 @@ export class MailService {
       });
       this.logger.log(`MailService initialized with SMTP host: ${host}`);
     } else {
-      this.logger.warn('SMTP credentials not configured. Outgoing emails will be logged to console in dev mode.');
+      this.logger.log('SMTP credentials not configured. Outgoing emails will be logged to console in dev mode.');
     }
   }
 
