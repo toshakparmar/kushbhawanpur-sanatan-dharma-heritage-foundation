@@ -560,3 +560,17 @@ export const defaultPledge = {
   textHi: "आइए, हम सब मिलकर अपनी ऐतिहासिक व आध्यात्मिक जड़ों को सुदृढ़ बनाएं।",
   source: "Brihadaranyaka Upanishad",
 };
+
+export const defaultTeam = [
+  {
+    id: "f9fe6984-f426-4e4b-9120-9b2400dd42bb",
+    type: "FOUNDER",
+    nameEn: "Mr. Sanjay Singh",
+    nameHi: "श्री संजय सिंह",
+    designation: "Educationist, Social Worker & Healthcare Supporter",
+    photoUrl: "https://racqnmwrulqqvqjcsxfn.supabase.co/storage/v1/object/public/kushbhawanpur-media/uploads/e0c709cd-fc39-4d03-bb73-cfed51f08af0.jpg",
+    bio: "Mr. Sanjay Singh is a respected educationist, social worker, and healthcare supporter dedicated to serving society through education, community welfare, and eye-care initiatives.\n\nHe serves as the Manager of Lal Shahab Inter College, Kalyanpur Amethi , where he is actively associated with advancing educational opportunities and supporting the development of young students. Through his leadership, he remains committed to promoting values, discipline, and quality education.\n\nMr. Singh is also associated with Milestone Surgery & Eye Specialist Hospital. Over the years, he has contributed to initiatives that have helped numerous people receive eye-care support and restore or improve their vision. His efforts reflect a strong commitment to making essential healthcare accessible to those in need.\n\nIn addition, Mr. Sanjay Singh is associated with the Ram Harshan Das Ji Maharaj Ayodhya Trust, supporting its spiritual, charitable, and social-welfare activities.\n\nWith a lifelong dedication to education, healthcare, and public service, Mr. Sanjay Singh continues to make a meaningful difference in the lives of people and the wider community.",
+    sortOrder: 1,
+    active: true,
+  },
+];

@@ -147,7 +147,14 @@ export class PublicService {
     }
 
     return {
-      siteSettings,
+      siteSettings: siteSettings
+        ? {
+            ...siteSettings,
+            statsHistoricalAmountOffsetPaise: siteSettings.statsHistoricalAmountOffsetPaise
+              ? Number(siteSettings.statsHistoricalAmountOffsetPaise)
+              : 0,
+          }
+        : null,
       navItems,
       pageSections,
       heroSlides,

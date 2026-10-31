@@ -13,6 +13,7 @@ import {
   defaultInvolveCards,
   defaultFaqs,
   defaultPledge,
+  defaultTeam,
 } from "@/content/defaults";
 import { QrMode } from "@kushbhawanpur/shared";
 
@@ -183,7 +184,7 @@ export async function getSiteData(): Promise<SiteData> {
         address: "Kushbhawanpur (Sultanpur), Uttar Pradesh - 228001, India",
       },
       milestones: data.milestones || [],
-      team: data.team || [],
+      team: (data.team && data.team.length > 0) ? data.team : defaultTeam,
       certifications: data.certifications || [],
       videos: data.videos || [],
       stats: data.stats || null,
@@ -224,7 +225,7 @@ export async function getSiteData(): Promise<SiteData> {
         address: "Kushbhawanpur (Sultanpur), Uttar Pradesh - 228001, India",
       },
       milestones: [],
-      team: [],
+      team: defaultTeam,
       certifications: [],
       videos: [],
       stats: null,
