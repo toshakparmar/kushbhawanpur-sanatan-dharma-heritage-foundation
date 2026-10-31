@@ -59,8 +59,19 @@ export class PublicController {
     return this.publicService.verifyReceiptPublic(receiptNo);
   }
 
+  @Post('contact')
+  async submitContact(@Body() dto: any, @Headers('x-forwarded-for') ip?: string) {
+    return this.publicService.submitContact(dto, ip);
+  }
+
+  @Post('volunteer')
+  async submitVolunteer(@Body() dto: any) {
+    return this.publicService.submitVolunteer(dto);
+  }
+
   @Post('reminders')
   async createReminder(@Body() dto: { email: string; sevaId?: string; dayOfMonth?: number }) {
     return this.publicService.createReminder(dto.email, dto.sevaId, dto.dayOfMonth);
   }
 }
+

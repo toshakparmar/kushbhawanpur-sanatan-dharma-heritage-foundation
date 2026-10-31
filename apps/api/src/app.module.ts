@@ -19,6 +19,7 @@ import { ReconciliationModule } from './modules/reconciliation/reconciliation.mo
 import { UsersModule } from './modules/users/users.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { MediaModule } from './modules/media/media.module';
+import { CmsModule } from './modules/cms/cms.module';
 import { AuditService } from './common/services/audit.service';
 
 @Module({
@@ -51,7 +52,9 @@ import { AuditService } from './common/services/audit.service';
     UsersModule,
     AuditModule,
     MediaModule,
+    CmsModule,
   ],
   providers: [AuditService],
 })
 export class AppModule {}
+

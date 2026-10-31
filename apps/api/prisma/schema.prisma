@@ -157,6 +157,7 @@ model Seva {
   suggestedAmounts Int[]
   imageUrl         String?
   active           Boolean                @default(true)
+  deletedAt        DateTime?
   sortOrder        Int                    @default(0)
   createdAt        DateTime               @default(now())
   updatedAt        DateTime               @updatedAt
@@ -254,6 +255,7 @@ model TeamMember {
   socialLinks Json?
   sortOrder   Int            @default(0)
   active      Boolean        @default(true)
+  deletedAt   DateTime?
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 
@@ -270,6 +272,7 @@ model Certification {
   thumbUrl  String?
   sortOrder Int       @default(0)
   active    Boolean   @default(true)
+  deletedAt DateTime?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
@@ -289,6 +292,7 @@ model Video {
   featured    Boolean       @default(false)
   sortOrder   Int           @default(0)
   published   Boolean       @default(true)
+  deletedAt   DateTime?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
@@ -296,13 +300,14 @@ model Video {
 }
 
 model Milestone {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   year      String
   title     String
   text      String
-  sortOrder Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  sortOrder Int       @default(0)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@map("milestones")
 }
@@ -337,4 +342,401 @@ model ReminderSubscription {
   updatedAt    DateTime @updatedAt
 
   @@map("reminder_subscriptions")
+}
+
+// ----------------------------------------------------
+// CMS & Dynamic Website Models
+// ----------------------------------------------------
+
+model SiteSettings {
+  id                               String   @id @default("singleton")
+  siteNameEn                       String   @default("Kushbhawanpur Sanatan Dharma & Heritage Foundation")
+  siteNameHi                       String   @default("कुशभवनपुर सनातन धर्म एवं हेरिटेज फाउंडेशन")
+  taglineEn                        String?  @default("Preserving Sacred Heritage · Serving Dharma · Empowering Seva")
+  taglineHi                        String?  @default("धर्मो रक्षति रक्षितः · धरोहर संरक्षण · निःस्वार्थ सेवा")
+  logoHeaderUrl                    String?  @default("/brand/logo-original.png")
+  logoFooterUrl                    String?  @default("/brand/logo-original.png")
+  logoLightUrl                     String?  @default("/brand/logo-original.png")
+  faviconUrl                       String?  @default("/favicon.ico")
+  ogImageUrl                       String?  @default("/brand/og-image.jpg")
+  email                            String?  @default("contact@kushbhawanpur.org")
+  donationEmail                    String?  @default("donations@kushbhawanpur.org")
+  phone                            String?  @default("+91 94150 00000")
+  whatsappNumber                   String?  @default("+91 94150 00000")
+  mapEmbedUrl                      String?
+  addressJson                      Json?
+  socialLinks                      Json?
+  defaultSeo                       Json?
+  announcementEnabled              Boolean  @default(false)
+  footerTextEn                     String?
+  footerTextHi                     String?
+  copyrightLineEn                  String?  @default("© 2026 Kushbhawanpur Sanatan Dharma & Heritage Foundation. All rights reserved.")
+  copyrightLineHi                  String?  @default("© २०२६ कुशभवनपुर सनातन धर्म एवं हेरिटेज फाउंडेशन। सर्वाधिकार सुरक्षित।")
+  analyticsId                      String?
+  liveStatsEnabled                 Boolean  @default(false)
+  statsHistoricalDonorsOffset      Int      @default(0)
+  statsHistoricalAmountOffsetPaise BigInt   @default(0)
+  updatedAt                        DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+model NavItem {
+  id        String    @id @default(uuid())
+  labelEn   String
+  labelHi   String?
+  target    String
+  sortOrder Int       @default(0)
+  isVisible Boolean   @default(true)
+  isCta     Boolean   @default(false)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("nav_items")
+}
+
+model PageSection {
+  id               String    @id @default(uuid())
+  key              String    @unique
+  enabled          Boolean   @default(true)
+  sortOrder        Int       @default(0)
+  variant          String    @default("default")
+  draftContent     Json
+  publishedContent Json
+  publishedAt      DateTime?
+  updatedBy        String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@map("page_sections")
+}
+
+model PageSectionVersion {
+  id          String   @id @default(uuid())
+  sectionKey  String
+  content     Json
+  publishedAt DateTime @default(now())
+  publishedBy String?
+
+  @@index([sectionKey, publishedAt])
+  @@map("page_section_versions")
+}
+
+model HeroSlide {
+  id          String    @id @default(uuid())
+  badgeEn     String?
+  badgeHi     String?
+  titleEn     String
+  titleHi     String?
+  subtitleEn  String?
+  subtitleHi  String?
+  ctaLabelEn  String?
+  ctaLabelHi  String?
+  ctaTarget   String?
+  cta2LabelEn String?
+  cta2LabelHi String?
+  cta2Target  String?
+  bgImageUrl  String?
+  sortOrder   Int       @default(0)
+  active      Boolean   @default(true)
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("hero_slides")
+}
+
+model TrustItem {
+  id         String    @id @default(uuid())
+  titleEn    String
+  titleHi    String?
+  subtitleEn String?
+  subtitleHi String?
+  iconName   String?
+  sortOrder  Int       @default(0)
+  active     Boolean   @default(true)
+  deletedAt  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@map("trust_items")
+}
+
+model ValuePillar {
+  id        String    @id @default(uuid())
+  titleEn   String
+  titleHi   String?
+  descEn    String
+  descHi    String?
+  iconName  String?
+  sortOrder Int       @default(0)
+  active    Boolean   @default(true)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("value_pillars")
+}
+
+model FocusArea {
+  id              String    @id @default(uuid())
+  slug            String    @unique
+  badgeEn         String?
+  badgeHi         String?
+  titleEn         String
+  titleHi         String?
+  shortDescEn     String
+  shortDescHi     String?
+  fullDescEn      String?
+  fullDescHi      String?
+  imageUrl        String?
+  suggestedAmount Int       @default(2100)
+  linkedSevaId    String?
+  sortOrder       Int       @default(0)
+  active          Boolean   @default(true)
+  deletedAt       DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("focus_areas")
+}
+
+model StoryChapter {
+  id            String    @id @default(uuid())
+  chapterNumber Int       @default(1)
+  titleEn       String
+  titleHi       String?
+  subtitleEn    String?
+  subtitleHi    String?
+  textEn        String
+  textHi        String?
+  quoteEn       String?
+  quoteHi       String?
+  hotspotX      Float     @default(50)
+  hotspotY      Float     @default(50)
+  hotspotRadius Float     @default(15)
+  chips         String[]  @default([])
+  imageUrl      String?
+  sevaLink      String?
+  sortOrder     Int       @default(0)
+  active        Boolean   @default(true)
+  deletedAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("story_chapters")
+}
+
+model ImpactItem {
+  id           String    @id @default(uuid())
+  amount       Int
+  labelEn      String
+  labelHi      String?
+  outcomeEn    String
+  outcomeHi    String?
+  descEn       String?
+  descHi       String?
+  iconName     String?
+  linkedSevaId String?
+  sortOrder    Int       @default(0)
+  active       Boolean   @default(true)
+  deletedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("impact_items")
+}
+
+model DonorBenefit {
+  id        String    @id @default(uuid())
+  titleEn   String
+  titleHi   String?
+  descEn    String
+  descHi    String?
+  iconName  String?
+  sortOrder Int       @default(0)
+  active    Boolean   @default(true)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("donor_benefits")
+}
+
+model GalleryItem {
+  id        String    @id @default(uuid())
+  imageUrl  String
+  captionEn String?
+  captionHi String?
+  category  String    @default("Heritage")
+  sortOrder Int       @default(0)
+  active    Boolean   @default(true)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("gallery_items")
+}
+
+model InvolveCard {
+  id           String    @id @default(uuid())
+  titleEn      String
+  titleHi      String?
+  descEn       String
+  descHi       String?
+  actionLabelEn String?
+  actionLabelHi String?
+  actionTarget String?
+  iconName     String?
+  isFeatured   Boolean   @default(false)
+  sortOrder    Int       @default(0)
+  active       Boolean   @default(true)
+  deletedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("involve_cards")
+}
+
+model FaqItem {
+  id         String    @id @default(uuid())
+  questionEn String
+  questionHi String?
+  answerEn   String
+  answerHi   String?
+  category   String    @default("General")
+  sortOrder  Int       @default(0)
+  active     Boolean   @default(true)
+  deletedAt  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@map("faq_items")
+}
+
+model PledgeContent {
+  id              String   @id @default("singleton")
+  shlokaSanskrit  String
+  transliteration String?
+  meaningEn       String
+  meaningHi       String?
+  textEn          String?
+  textHi          String?
+  source          String?  @default("Brihadaranyaka Upanishad")
+  updatedAt       DateTime @updatedAt
+
+  @@map("pledge_content")
+}
+
+model PolicyPage {
+  id        String    @id @default(uuid())
+  slug      String    @unique
+  titleEn   String
+  titleHi   String?
+  contentEn String
+  contentHi String?
+  deletedAt DateTime?
+  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now())
+
+  @@map("policy_pages")
+}
+
+model Announcement {
+  id          String    @id @default(uuid())
+  titleEn     String
+  titleHi     String?
+  textEn      String
+  textHi      String?
+  linkLabelEn String?
+  linkLabelHi String?
+  linkUrl     String?
+  startsAt    DateTime?
+  endsAt      DateTime?
+  dismissible Boolean   @default(true)
+  active      Boolean   @default(true)
+  deletedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("announcements")
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  interest  String?
+  message   String
+  status    String   @default("NEW") // NEW, READ, REPLIED, ARCHIVED
+  notes     String?
+  ipHash    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@map("contact_messages")
+}
+
+model VolunteerApplication {
+  id           String   @id @default(uuid())
+  name         String
+  phone        String
+  email        String
+  city         String?
+  skills       String?
+  availability String?
+  message      String?
+  status       String   @default("NEW") // NEW, REVIEWING, ACCEPTED, ARCHIVED
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@map("volunteer_applications")
+}
+
+// ----------------------------------------------------
+// Media Management System Models
+// ----------------------------------------------------
+
+model MediaAsset {
+  id           String       @id @default(uuid())
+  kind         String       @default("IMAGE") // IMAGE, DOCUMENT
+  originalName String
+  mime         String
+  sizeBytes    Int
+  width        Int?
+  height       Int?
+  blurDataUrl  String?
+  storageKey   String
+  url          String
+  variants     Json?
+  alt          String?
+  caption      String?
+  status       String       @default("ATTACHED") // TEMP, ATTACHED, TRASHED
+  uploadedById String?
+  deletedAt    DateTime?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  usages       MediaUsage[]
+
+  @@index([status, deletedAt])
+  @@map("media_assets")
+}
+
+model MediaUsage {
+  id         String     @id @default(uuid())
+  assetId    String
+  entityType String
+  entityId   String
+  field      String
+  createdAt  DateTime   @default(now())
+  asset      MediaAsset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@index([assetId])
+  @@index([entityType, entityId])
+  @@map("media_usages")
 }

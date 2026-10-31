@@ -1,4 +1,19 @@
 import { siteConfig } from "@/content/site.config";
+import {
+  defaultSiteSettings,
+  defaultNavItems,
+  defaultHeroSlides,
+  defaultTrustItems,
+  defaultValuePillars,
+  defaultFocusAreas,
+  defaultStoryChapters,
+  defaultImpactItems,
+  defaultDonorBenefits,
+  defaultGalleryItems,
+  defaultInvolveCards,
+  defaultFaqs,
+  defaultPledge,
+} from "@/content/defaults";
 import { QrMode } from "@kushbhawanpur/shared";
 
 const API_BASE =
@@ -7,6 +22,27 @@ const API_BASE =
   "http://localhost:4000/api/v1";
 
 export interface SiteData {
+  siteSettings?: any;
+  navItems?: any[];
+  pageSections?: any[];
+  heroSlides?: any[];
+  trustItems?: any[];
+  valuePillars?: any[];
+  focusAreas?: any[];
+  storyChapters?: any[];
+  impactItems?: any[];
+  donorBenefits?: any[];
+  galleryItems?: any[];
+  involveCards?: any[];
+  faqItems?: any[];
+  pledgeContent?: any;
+  policies?: any[];
+  announcements?: any[];
+  stats?: {
+    totalAmountRupees: number;
+    totalDonationsCount: number;
+    totalDonorsCount: number;
+  } | null;
   org: {
     nameEn: string;
     nameHi: string;
@@ -105,8 +141,8 @@ export interface DonateConfig {
 }
 
 /**
- * Server component fetcher for public site data (About, Milestones, Team, Certifications, Videos)
- * Includes ISR revalidation (60s) with 100% graceful fallback to static config if the API is offline.
+ * Server component fetcher for public site data (CMS Sections, About, Milestones, Team, Certifications, Videos)
+ * Includes ISR revalidation (60s) with 100% graceful fallback to static defaults if the API is offline.
  */
 export async function getSiteData(): Promise<SiteData> {
   try {
@@ -115,38 +151,87 @@ export async function getSiteData(): Promise<SiteData> {
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     const json = await res.json();
-    return json.data || json;
-  } catch (err) {
-    // Graceful offline fallback: use siteConfig, return empty arrays for dynamic entities
-    // Dynamic sections hide automatically when empty per requirements
+    const data = json.data || json;
     return {
+      siteSettings: data.siteSettings || defaultSiteSettings,
+      navItems: data.navItems || defaultNavItems,
+      pageSections: data.pageSections || [],
+      heroSlides: data.heroSlides?.length ? data.heroSlides : defaultHeroSlides,
+      trustItems: data.trustItems?.length ? data.trustItems : defaultTrustItems,
+      valuePillars: data.valuePillars?.length ? data.valuePillars : defaultValuePillars,
+      focusAreas: data.focusAreas?.length ? data.focusAreas : defaultFocusAreas,
+      storyChapters: data.storyChapters?.length ? data.storyChapters : defaultStoryChapters,
+      impactItems: data.impactItems?.length ? data.impactItems : defaultImpactItems,
+      donorBenefits: data.donorBenefits?.length ? data.donorBenefits : defaultDonorBenefits,
+      galleryItems: data.galleryItems?.length ? data.galleryItems : defaultGalleryItems,
+      involveCards: data.involveCards?.length ? data.involveCards : defaultInvolveCards,
+      faqItems: data.faqItems?.length ? data.faqItems : defaultFaqs,
+      pledgeContent: data.pledgeContent || defaultPledge,
+      policies: data.policies || [],
+      announcements: data.announcements || [],
+      org: data.org || {
+        nameEn: defaultSiteSettings.siteNameEn,
+        nameHi: defaultSiteSettings.siteNameHi,
+        logoUrl: defaultSiteSettings.logoHeaderUrl,
+        taglineEn: defaultSiteSettings.taglineEn,
+        taglineHi: defaultSiteSettings.taglineHi,
+        aboutEn: "Dedicated to the cultural preservation, temple revival, manuscript conservation, and Gaushala seva of sacred Kushbhawanpur.",
+        visionEn: "Restoring the sacred heritage of Sultanpur to its timeless Vedic glory and dharmic reverence.",
+        missionEn: "Engaging local communities, scholars, and devotees in dharmic service, environmental sanctity, and Sanatan traditions.",
+        email: defaultSiteSettings.email,
+        phone: defaultSiteSettings.phone,
+        address: "Kushbhawanpur (Sultanpur), Uttar Pradesh - 228001, India",
+      },
+      milestones: data.milestones || [],
+      team: data.team || [],
+      certifications: data.certifications || [],
+      videos: data.videos || [],
+      stats: data.stats || null,
+    };
+  } catch (err) {
+    // Graceful offline fallback: use defaults
+    return {
+      siteSettings: defaultSiteSettings,
+      navItems: defaultNavItems,
+      pageSections: [],
+      heroSlides: defaultHeroSlides,
+      trustItems: defaultTrustItems,
+      valuePillars: defaultValuePillars,
+      focusAreas: defaultFocusAreas,
+      storyChapters: defaultStoryChapters,
+      impactItems: defaultImpactItems,
+      donorBenefits: defaultDonorBenefits,
+      galleryItems: defaultGalleryItems,
+      involveCards: defaultInvolveCards,
+      faqItems: defaultFaqs,
+      pledgeContent: defaultPledge,
+      policies: [],
+      announcements: [],
       org: {
-        nameEn: siteConfig.meta.name,
-        nameHi: siteConfig.meta.devanagariName,
-        logoUrl: "/brand/logo-original.png",
-        taglineEn: siteConfig.meta.tagline,
-        taglineHi: siteConfig.meta.devanagariTagline,
+        nameEn: defaultSiteSettings.siteNameEn,
+        nameHi: defaultSiteSettings.siteNameHi,
+        logoUrl: defaultSiteSettings.logoHeaderUrl,
+        taglineEn: defaultSiteSettings.taglineEn,
+        taglineHi: defaultSiteSettings.taglineHi,
         aboutEn:
           "Dedicated to the cultural preservation, temple revival, manuscript conservation, and Gaushala seva of sacred Kushbhawanpur.",
         visionEn:
           "Restoring the sacred heritage of Sultanpur to its timeless Vedic glory and dharmic reverence.",
         missionEn:
           "Engaging local communities, scholars, and devotees in dharmic service, environmental sanctity, and Sanatan traditions.",
-        email: siteConfig.contact.email,
-        phone: siteConfig.contact.phone || "",
-        address: `${siteConfig.contact.registeredAddress.line1}, ${siteConfig.contact.registeredAddress.city}, ${siteConfig.contact.registeredAddress.state} ${siteConfig.contact.registeredAddress.pincode}`,
-        regNo: siteConfig.verification.registrationNumber || undefined,
-        panNo: undefined,
-        approval80G: siteConfig.verification.taxExemption80GNumber || undefined,
-        approval12A: siteConfig.verification.taxExemption12ANumber || undefined,
+        email: defaultSiteSettings.email,
+        phone: defaultSiteSettings.phone,
+        address: "Kushbhawanpur (Sultanpur), Uttar Pradesh - 228001, India",
       },
       milestones: [],
-      team: [], // Hides team section if database empty
-      certifications: [], // Hides certifications if database empty
-      videos: [], // Hides videos if database empty
+      team: [],
+      certifications: [],
+      videos: [],
+      stats: null,
     };
   }
 }
+
 
 /**
  * Server / client fetcher for donation options & configuration

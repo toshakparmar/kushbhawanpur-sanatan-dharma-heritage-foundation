@@ -28,28 +28,141 @@ export class PublicService {
    * empty arrays are returned so frontend components automatically hide them.
    */
   async getSiteContent() {
-    const [org, milestones, team, certifications, videos] = await Promise.all([
-      this.prisma.organization.findUnique({
-        where: { id: 'singleton' },
+    const [
+      siteSettings,
+      navItems,
+      pageSections,
+      heroSlides,
+      trustItems,
+      valuePillars,
+      focusAreas,
+      storyChapters,
+      impactItems,
+      donorBenefits,
+      galleryItems,
+      involveCards,
+      faqItems,
+      pledgeContent,
+      policies,
+      announcements,
+      org,
+      milestones,
+      team,
+      certifications,
+      videos,
+    ] = await Promise.all([
+      this.prisma.siteSettings.findUnique({ where: { id: 'singleton' } }),
+      this.prisma.navItem.findMany({
+        where: { isVisible: true, deletedAt: null },
+        orderBy: { sortOrder: 'asc' },
       }),
+      this.prisma.pageSection.findMany({
+        where: { enabled: true },
+        orderBy: { sortOrder: 'asc' },
+      }),
+      this.prisma.heroSlide.findMany({
+        where: { active: true, deletedAt: null },
+        orderBy: { sortOrder: 'asc' },
+      }),
+      this.prisma.trustItem.findMany({
+        where: { active: true, deletedAt: null },
+        orderBy: { sortOrder: 'asc' },
+      }),
+      this.prisma.valuePillar.findMany({
+        where: { active: true, deletedAt: null },
+        orderBy: { sortOrder: 'asc' },
+      }),
+      this.prisma.focusArea.findMany({
+        where: { active: true, deletedAt: null },
+        orderBy: { sortOrder: 'asc' },
+      }),
+      this.prisma.storyChapter.findMany({
+        where: { active: true, deletedAt: null },
+        orderBy: { sortOrder: 'asc' },
+      }),
+      this.prisma.impactItem.findMany({
+        where: { active: true, deletedAt: null },
+        orderBy: { sortOrder: 'asc' },
+      }),
+      this.prisma.donorBenefit.findMany({
+        where: { active: true, deletedAt: null },
+        orderBy: { sortOrder: 'asc' },
+      }),
+      this.prisma.galleryItem.findMany({
+        where: { active: true, deletedAt: null },
+        orderBy: { sortOrder: 'asc' },
+      }),
+      this.prisma.involveCard.findMany({
+        where: { active: true, deletedAt: null },
+        orderBy: { sortOrder: 'asc' },
+      }),
+      this.prisma.faqItem.findMany({
+        where: { active: true, deletedAt: null },
+        orderBy: { sortOrder: 'asc' },
+      }),
+      this.prisma.pledgeContent.findUnique({ where: { id: 'singleton' } }),
+      this.prisma.policyPage.findMany({ where: { deletedAt: null } }),
+      this.prisma.announcement.findMany({
+        where: { active: true, deletedAt: null },
+      }),
+      this.prisma.organization.findUnique({ where: { id: 'singleton' } }),
       this.prisma.milestone.findMany({
+        where: { deletedAt: null },
         orderBy: [{ sortOrder: 'asc' }, { year: 'asc' }],
       }),
       this.prisma.teamMember.findMany({
-        where: { active: true },
+        where: { active: true, deletedAt: null },
         orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
       }),
       this.prisma.certification.findMany({
-        where: { active: true },
+        where: { active: true, deletedAt: null },
         orderBy: [{ sortOrder: 'asc' }, { issueDate: 'desc' }],
       }),
       this.prisma.video.findMany({
-        where: { published: true },
+        where: { published: true, deletedAt: null },
         orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
       }),
     ]);
 
+    // Compute live stats if enabled
+    let stats = null;
+    if (siteSettings?.liveStatsEnabled) {
+      const verifiedAgg = await this.prisma.donation.aggregate({
+        where: { status: DonationStatus.VERIFIED },
+        _count: { id: true },
+        _sum: { amountPaise: true },
+      });
+      const uniqueDonorsCount = await this.prisma.donor.count();
+      const offsetPaise = siteSettings.statsHistoricalAmountOffsetPaise || BigInt(0);
+      const offsetDonors = siteSettings.statsHistoricalDonorsOffset || 0;
+
+      const totalPaise = (verifiedAgg._sum.amountPaise || BigInt(0)) + offsetPaise;
+      const totalDonors = uniqueDonorsCount + offsetDonors;
+
+      stats = {
+        totalAmountRupees: Number(totalPaise / BigInt(100)),
+        totalDonationsCount: verifiedAgg._count.id + offsetDonors,
+        totalDonorsCount: totalDonors,
+      };
+    }
+
     return {
+      siteSettings,
+      navItems,
+      pageSections,
+      heroSlides,
+      trustItems,
+      valuePillars,
+      focusAreas,
+      storyChapters,
+      impactItems,
+      donorBenefits,
+      galleryItems,
+      involveCards,
+      faqItems,
+      pledgeContent,
+      policies,
+      announcements,
       org: org || {
         nameEn: 'Kushbhawanpur Sanatan Dharma & Heritage Foundation',
         nameHi: 'कुशभवनपुर सनातन धर्म एवं हेरिटेज फाउंडेशन',
@@ -59,7 +172,58 @@ export class PublicService {
       team: team || [],
       certifications: certifications || [],
       videos: videos || [],
+      stats,
     };
+  }
+
+  async submitContact(dto: { name: string; email: string; phone?: string; interest?: string; message: string; honeypot?: string }, ip?: string) {
+    if (dto.honeypot) {
+      // Spam honeypot triggered
+      return { success: true };
+    }
+    if (!dto.name || !dto.email || !dto.message) {
+      throw new BadRequestException('Name, email, and message are required.');
+    }
+
+    const ipHash = ip ? crypto.createHash('sha256').update(ip).digest('hex').substring(0, 16) : undefined;
+
+    const message = await this.prisma.contactMessage.create({
+      data: {
+        name: dto.name.trim(),
+        email: dto.email.trim().toLowerCase(),
+        phone: dto.phone?.trim(),
+        interest: dto.interest?.trim(),
+        message: dto.message.trim(),
+        ipHash,
+        status: 'NEW',
+      },
+    });
+
+    return { success: true, messageId: message.id };
+  }
+
+  async submitVolunteer(dto: { name: string; phone: string; email: string; city?: string; skills?: string; availability?: string; message?: string; honeypot?: string }) {
+    if (dto.honeypot) {
+      return { success: true };
+    }
+    if (!dto.name || !dto.phone || !dto.email) {
+      throw new BadRequestException('Name, phone, and email are required.');
+    }
+
+    const application = await this.prisma.volunteerApplication.create({
+      data: {
+        name: dto.name.trim(),
+        phone: dto.phone.trim(),
+        email: dto.email.trim().toLowerCase(),
+        city: dto.city?.trim(),
+        skills: dto.skills?.trim(),
+        availability: dto.availability?.trim(),
+        message: dto.message?.trim(),
+        status: 'NEW',
+      },
+    });
+
+    return { success: true, applicationId: application.id };
   }
 
   /**
