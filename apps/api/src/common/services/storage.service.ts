@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs';
 import * as path from 'path';
 import { randomUUID } from 'crypto';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { StorageClient } from '@supabase/storage-js';
 
 export interface UploadOptions {
   folder?: string;
@@ -25,8 +25,8 @@ export class StorageService implements OnModuleInit {
   private readonly uploadDir: string;
   private readonly apiUrl: string;
 
-  // Supabase Configuration
-  private supabase: SupabaseClient | null = null;
+  // Supabase Storage Configuration
+  private storageClient: StorageClient | null = null;
   private readonly supabaseUrl: string;
   private readonly supabaseKey: string;
   private readonly bucketName: string;
@@ -53,10 +53,12 @@ export class StorageService implements OnModuleInit {
 
     if (configuredDriver === 'supabase' && this.supabaseUrl && this.supabaseKey) {
       this.driver = 'supabase';
-      this.supabase = createClient(this.supabaseUrl, this.supabaseKey, {
-        auth: { persistSession: false },
+      const storageApiUrl = `${this.supabaseUrl.replace(/\/+$/, '')}/storage/v1`;
+      this.storageClient = new StorageClient(storageApiUrl, {
+        apikey: this.supabaseKey,
+        Authorization: `Bearer ${this.supabaseKey}`,
       });
-      this.logger.log(`StorageService initialized with Supabase Storage (bucket: ${this.bucketName})`);
+      this.logger.log(`StorageService initialized with Supabase Storage Bucket: "${this.bucketName}"`);
     } else {
       this.driver = 'local';
       if (configuredDriver === 'supabase') {
@@ -74,7 +76,7 @@ export class StorageService implements OnModuleInit {
   }
 
   async onModuleInit() {
-    if (this.driver === 'supabase' && this.supabase) {
+    if (this.driver === 'supabase' && this.storageClient) {
       await this.ensureBucketExists();
     }
   }
@@ -83,10 +85,10 @@ export class StorageService implements OnModuleInit {
    * Ensures the target Supabase storage bucket exists and is public.
    */
   private async ensureBucketExists(): Promise<void> {
-    if (this.bucketEnsured || !this.supabase) return;
+    if (this.bucketEnsured || !this.storageClient) return;
 
     try {
-      const { data: buckets, error } = await this.supabase.storage.listBuckets();
+      const { data: buckets, error } = await this.storageClient.listBuckets();
       if (error) {
         this.logger.warn(`Could not list Supabase storage buckets: ${error.message}`);
         return;
@@ -94,7 +96,7 @@ export class StorageService implements OnModuleInit {
 
       const exists = buckets?.some((b) => b.name === this.bucketName);
       if (!exists) {
-        const { error: createError } = await this.supabase.storage.createBucket(
+        const { error: createError } = await this.storageClient.createBucket(
           this.bucketName,
           {
             public: true,
@@ -129,11 +131,11 @@ export class StorageService implements OnModuleInit {
     const key = `${subfolder}/${filename}`;
 
     // 1. Supabase Storage Driver
-    if (this.driver === 'supabase' && this.supabase) {
+    if (this.driver === 'supabase' && this.storageClient) {
       try {
         await this.ensureBucketExists();
 
-        const { error: uploadError } = await this.supabase.storage
+        const { error: uploadError } = await this.storageClient
           .from(this.bucketName)
           .upload(key, buffer, {
             contentType: mimeType,
@@ -145,7 +147,7 @@ export class StorageService implements OnModuleInit {
             `Supabase upload failed for "${key}": ${uploadError.message}. Falling back to local disk.`,
           );
         } else {
-          const { data: urlData } = this.supabase.storage
+          const { data: urlData } = this.storageClient
             .from(this.bucketName)
             .getPublicUrl(key);
 
@@ -192,9 +194,9 @@ export class StorageService implements OnModuleInit {
     let deleted = false;
 
     // Supabase deletion
-    if (this.driver === 'supabase' && this.supabase) {
+    if (this.driver === 'supabase' && this.storageClient) {
       try {
-        const { error } = await this.supabase.storage
+        const { error } = await this.storageClient
           .from(this.bucketName)
           .remove([key]);
 
