@@ -11,17 +11,28 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 
 class LoginDto {
+  @IsEmail({}, { message: 'A valid email is required' })
+  @IsNotEmpty()
   email!: string;
+
+  @IsString()
+  @IsNotEmpty()
   password!: string;
 }
 
 class ChangePasswordDto {
+  @IsString()
+  @IsNotEmpty()
   currentPassword!: string;
+
+  @IsString()
+  @MinLength(8, { message: 'New password must be at least 8 characters long' })
   newPassword!: string;
 }
 

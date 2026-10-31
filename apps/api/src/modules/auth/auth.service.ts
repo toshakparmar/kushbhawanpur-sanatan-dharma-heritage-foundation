@@ -20,6 +20,10 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, pass: string) {
+    if (!email || typeof email !== 'string' || !pass) {
+      return null;
+    }
+
     const user = await this.prisma.adminUser.findUnique({
       where: { email: email.toLowerCase().trim() },
     });
