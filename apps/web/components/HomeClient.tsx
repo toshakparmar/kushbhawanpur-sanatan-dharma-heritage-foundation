@@ -49,59 +49,93 @@ export function HomeClient({ siteData, donateConfig }: HomeClientProps) {
     setSelectedAmount(amount);
   };
 
+  // Helper to check if admin enabled or disabled a section
+  const isEnabled = (key: string): boolean => {
+    if (!siteData?.pageSections || siteData.pageSections.length === 0) return true;
+    const found = siteData.pageSections.find((s: any) => s.key === key);
+    return found ? found.enabled !== false : true;
+  };
+
   return (
     <div className="flex flex-col w-full">
       {/* 1. Hero Section */}
-      <Hero />
+      {isEnabled("hero") && <Hero />}
+
+      {/* Optional Live Verified Stats Strip (Opt-in by Admin) */}
+      {siteData.stats && (
+        <div className="w-full bg-maroon text-cream py-2.5 px-4 text-center border-y border-gold/30">
+          <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-4 text-xs font-serif">
+            <span className="flex items-center gap-1.5 font-bold text-gold">
+              <span>●</span> Verified Seva So Far:
+            </span>
+            <span>
+              ₹{siteData.stats.totalAmountRupees.toLocaleString("en-IN")} Contributed
+            </span>
+            <span className="text-gold/40">|</span>
+            <span>
+              {siteData.stats.totalDonorsCount.toLocaleString("en-IN")} Dharmic Patrons
+            </span>
+            <span className="text-gold/40">|</span>
+            <span className="text-gold">100% Dedicated to Preserved Shrines</span>
+          </div>
+        </div>
+      )}
 
       {/* 2. Trust & Transparency Marquee */}
-      <TrustStrip />
+      {isEnabled("trust") && <TrustStrip />}
 
       {/* 3. About Section (Foundation details, Vision, Mission, Journey Timeline) */}
-      <About org={siteData.org} milestones={siteData.milestones} />
+      {isEnabled("about") && (
+        <About org={siteData.org} milestones={siteData.milestones} />
+      )}
 
-      {/* 3.1 Leadership & Volunteers (Auto-hides if empty!) */}
-      <Team team={siteData.team} />
+      {/* 3.1 Leadership & Volunteers (Auto-hides if empty or disabled) */}
+      {isEnabled("team") && <Team team={siteData.team} />}
 
-      {/* 3.2 Official Registrations & Certifications (Auto-hides if empty!) */}
-      <Certifications certifications={siteData.certifications} />
+      {/* 3.2 Official Registrations & Certifications (Auto-hides if empty or disabled) */}
+      {isEnabled("certifications") && (
+        <Certifications certifications={siteData.certifications} />
+      )}
 
       {/* 4. Our Story — Five Symbols, One Sankalpa */}
-      <Story />
+      {isEnabled("story") && <Story />}
 
       {/* 5. Our Work / Focus Areas Bento */}
-      <Work onSelectCause={handleSelectCause} />
+      {isEnabled("work") && <Work onSelectCause={handleSelectCause} />}
 
-      {/* 6. Videos Carousel with 16:9 Lite Embed Player (Auto-hides if empty!) */}
-      <Videos videos={siteData.videos} />
+      {/* 6. Videos Carousel with 16:9 Lite Embed Player (Auto-hides if empty or disabled) */}
+      {isEnabled("videos") && <Videos videos={siteData.videos} />}
 
       {/* 7. Donate Conversion Center (Dynamic 4-Step Flow without Gateway) */}
-      <Donate
-        initialConfig={donateConfig}
-        initialAmount={selectedAmount}
-        initialSevaId={selectedSevaId}
-      />
+      {isEnabled("donate") && (
+        <Donate
+          initialConfig={donateConfig}
+          initialAmount={selectedAmount}
+          initialSevaId={selectedSevaId}
+        />
+      )}
 
       {/* 8. Impact at a Glance */}
-      <Impact onSelectAmount={handleSelectAmount} />
+      {isEnabled("impact") && <Impact onSelectAmount={handleSelectAmount} />}
 
       {/* 9. What Donors Receive */}
-      <Receive />
+      {isEnabled("receive") && <Receive />}
 
       {/* 10. Gallery / Moments of Heritage */}
-      <Gallery />
+      {isEnabled("gallery") && <Gallery />}
 
       {/* 11. Get Involved */}
-      <Involve />
+      {isEnabled("involve") && <Involve />}
 
       {/* 12. Pledge & Shloka Banner */}
-      <Pledge />
+      {isEnabled("pledge") && <Pledge />}
 
       {/* 13. Frequently Asked Questions */}
-      <Faq />
+      {isEnabled("faq") && <Faq />}
 
       {/* 14. Contact & Office Details */}
-      <Contact />
+      {isEnabled("contact") && <Contact />}
     </div>
   );
 }
+

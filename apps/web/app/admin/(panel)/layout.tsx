@@ -24,6 +24,7 @@ import {
   Menu,
   X,
   FileSpreadsheet,
+  Image as ImageIcon,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -31,6 +32,19 @@ interface AdminUser {
   id: string;
   email: string;
   role: "SUPER_ADMIN" | "ACCOUNTS" | "CONTENT";
+}
+
+interface NavItem {
+  label: string;
+  href: string;
+  icon: any;
+  badge?: number;
+  badgeColor?: string;
+}
+
+interface NavGroup {
+  title: string;
+  items: NavItem[];
 }
 
 export default function AdminPanelLayout({
@@ -71,7 +85,7 @@ export default function AdminPanelLayout({
     }
   };
 
-  const navGroups = [
+  const navGroups: NavGroup[] = [
     {
       title: "Core Operations",
       items: [
@@ -87,21 +101,27 @@ export default function AdminPanelLayout({
         { label: "Bank Reconciliation", href: "/admin/reconciliation", icon: FileSpreadsheet },
         { label: "Donors Registry", href: "/admin/donors", icon: Users2 },
         { label: "Receipts Issued", href: "/admin/receipts", icon: FileCheck2 },
+        { label: "Inbox & Inquiries", href: "/admin/inbox", icon: ExternalLink },
       ],
     },
     {
-      title: "Content & CMS",
+      title: "Dynamic Website (CMS)",
       items: [
-        { label: "Sevas & Causes", href: "/admin/sevas", icon: Layers },
+        { label: "Website Sections", href: "/admin/website", icon: Layers },
+        { label: "Media Library", href: "/admin/media", icon: ImageIcon },
+        { label: "Sevas & Causes", href: "/admin/sevas", icon: HeartHandshake },
         { label: "Leadership & Team", href: "/admin/team", icon: Users2 },
         { label: "Certifications", href: "/admin/certifications", icon: Award },
         { label: "Videos CMS", href: "/admin/videos", icon: Video },
         { label: "Journey Milestones", href: "/admin/milestones", icon: Calendar },
+        { label: "Content Trash", href: "/admin/trash", icon: History },
       ],
     },
     {
       title: "Settings & System",
       items: [
+        { label: "Site & SEO Settings", href: "/admin/site-settings", icon: Building },
+        { label: "Policies & Terms", href: "/admin/policies", icon: FileCheck2 },
         { label: "Foundation Profile", href: "/admin/organization", icon: Building },
         { label: "Payment & UPI Config", href: "/admin/payment-settings", icon: CreditCard },
         { label: "Admin Users", href: "/admin/users", icon: ShieldCheck },
@@ -109,6 +129,8 @@ export default function AdminPanelLayout({
       ],
     },
   ];
+
+
 
   return (
     <div className="min-h-screen flex bg-cream/50">
