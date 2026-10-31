@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
-import cookieParser from 'cookie-parser';
+const cookieParser = require('cookie-parser');
 import * as express from 'express';
 import * as path from 'path';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
