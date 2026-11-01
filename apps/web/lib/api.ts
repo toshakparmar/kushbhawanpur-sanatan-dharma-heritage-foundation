@@ -14,6 +14,7 @@ import {
   defaultFaqs,
   defaultPledge,
   defaultTeam,
+  TeamMemberDef,
 } from "@/content/defaults";
 import { QrMode } from "@kushbhawanpur/shared";
 
@@ -74,16 +75,7 @@ export interface SiteData {
     title: string;
     text: string;
   }>;
-  team: Array<{
-    id: string;
-    type: "FOUNDER" | "CO_FOUNDER" | "TRUSTEE" | "VOLUNTEER";
-    nameEn: string;
-    nameHi?: string;
-    designation: string;
-    photoUrl?: string;
-    bio?: string;
-    socials?: any;
-  }>;
+  team: TeamMemberDef[];
   certifications: Array<{
     id: string;
     title: string;

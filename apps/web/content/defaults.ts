@@ -561,7 +561,22 @@ export const defaultPledge = {
   source: "Brihadaranyaka Upanishad",
 };
 
-export const defaultTeam = [
+export type TeamMemberRole = "FOUNDER" | "CO_FOUNDER" | "TRUSTEE" | "VOLUNTEER";
+
+export interface TeamMemberDef {
+  id: string;
+  type: TeamMemberRole;
+  nameEn: string;
+  nameHi?: string;
+  designation: string;
+  photoUrl?: string;
+  bio?: string;
+  sortOrder?: number;
+  active?: boolean;
+  socials?: any;
+}
+
+export const defaultTeam: TeamMemberDef[] = [
   {
     id: "f9fe6984-f426-4e4b-9120-9b2400dd42bb",
     type: "FOUNDER",
