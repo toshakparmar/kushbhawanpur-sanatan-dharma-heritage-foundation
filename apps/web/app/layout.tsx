@@ -110,9 +110,8 @@ export default function RootLayout({
     description: siteConfig.meta.tagline,
     address: {
       "@type": "PostalAddress",
-      streetAddress: `${siteConfig.contact.registeredAddress.line1}${
-        siteConfig.contact.registeredAddress.line2 ? `, ${siteConfig.contact.registeredAddress.line2}` : ""
-      }`,
+      streetAddress: `${siteConfig.contact.registeredAddress.line1}${siteConfig.contact.registeredAddress.line2 ? `, ${siteConfig.contact.registeredAddress.line2}` : ""
+        }`,
       addressLocality: siteConfig.contact.registeredAddress.city,
       addressRegion: siteConfig.contact.registeredAddress.state,
       postalCode: siteConfig.contact.registeredAddress.pincode,

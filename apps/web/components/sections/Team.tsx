@@ -73,7 +73,7 @@ function LeaderCard({ member }: { member: TeamMember }) {
         rotateY: shouldReduceMotion ? 0 : rotateY,
         transformStyle: "preserve-3d",
       }}
-      className="relative rounded-3xl bg-paper/95 p-6 sm:p-8 border border-gold/40 shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col items-center text-center group"
+      className="relative rounded-3xl bg-paper/95 p-5 sm:p-6 border border-gold/40 shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col items-center text-center group h-full"
     >
       {/* Decorative Gold Corner Flairs */}
       <div className="absolute top-3 left-3 w-3 h-3 border-t-2 border-l-2 border-gold/60 pointer-events-none" />
@@ -82,18 +82,18 @@ function LeaderCard({ member }: { member: TeamMember }) {
       <div className="absolute bottom-3 right-3 w-3 h-3 border-b-2 border-r-2 border-gold/60 pointer-events-none" />
 
       {/* Arched Portrait Mask */}
-      <div className="relative w-44 h-56 sm:w-52 sm:h-64 rounded-t-[90px] rounded-b-2xl overflow-hidden border-2 border-gold/60 shadow-inner bg-sand/30 mb-6 flex items-center justify-center">
+      <div className="relative w-36 h-48 sm:w-44 sm:h-56 rounded-t-[80px] rounded-b-2xl overflow-hidden border-2 border-gold/60 shadow-inner bg-sand/30 mb-5 flex items-center justify-center shrink-0">
         {member.photoUrl ? (
           <Image
             src={member.photoUrl}
             alt={member.nameEn}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes="(max-width: 640px) 176px, 208px"
+            sizes="(max-width: 640px) 144px, 176px"
           />
         ) : (
           <div className="flex flex-col items-center justify-center p-4 text-center">
-            <span className="font-serif text-4xl sm:text-5xl font-bold text-maroon/70 mb-2">
+            <span className="font-serif text-3xl sm:text-4xl font-bold text-maroon/70 mb-2">
               {member.nameEn.split(" ").map((n) => n[0]).join("")}
             </span>
             <ShieldCheck className="w-6 h-6 text-gold/70" />
@@ -106,22 +106,22 @@ function LeaderCard({ member }: { member: TeamMember }) {
         {roleLabel}
       </span>
 
-      <h3 className="font-serif text-2xl sm:text-3xl font-bold text-maroon leading-tight mb-1">
+      <h3 className="font-serif text-xl sm:text-2xl font-bold text-maroon leading-tight mb-1">
         {member.nameEn}
       </h3>
       {member.nameHi && (
-        <p className="font-hindi text-base sm:text-lg text-ink-muted mb-2 font-medium">
+        <p className="font-hindi text-sm sm:text-base text-ink-muted mb-2 font-medium">
           {member.nameHi}
         </p>
       )}
 
-      <p className="text-xs sm:text-sm font-sans text-saffron-dark font-medium mb-4">
+      <p className="text-xs sm:text-sm font-sans text-saffron-dark font-medium mb-3">
         {member.designation}
       </p>
 
       {/* Bio message */}
       {member.bio && (
-        <p className="text-xs sm:text-sm text-ink-muted leading-relaxed font-sans max-w-md line-clamp-4">
+        <p className="text-xs text-ink-muted leading-relaxed font-sans max-w-xs line-clamp-4 mt-auto">
           &ldquo;{member.bio}&rdquo;
         </p>
       )}
@@ -184,7 +184,7 @@ export function Team({ team }: TeamProps) {
 
   return (
     <section id="team" className="py-20 sm:py-24 bg-cream/50 relative overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <SectionHeading
           badge="Our Leadership & Sevadars"
           title="Guided by Devotion, Driven by Seva"
@@ -194,10 +194,14 @@ export function Team({ team }: TeamProps) {
         {/* Leaders (Founder, Co-Founder, Trustees) */}
         {leaders.length > 0 && (
           <div
-            className={`mt-12 sm:mt-16 grid gap-8 sm:gap-10 ${
+            className={`mt-12 sm:mt-16 grid gap-6 sm:gap-8 ${
               leaders.length === 1
                 ? "max-w-md mx-auto"
-                : "grid-cols-1 md:grid-cols-2 lg:grid-cols-2 max-w-4xl mx-auto"
+                : leaders.length === 2
+                ? "grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto"
+                : leaders.length === 3
+                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto"
+                : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-7xl mx-auto"
             }`}
           >
             {leaders.map((leader) => (

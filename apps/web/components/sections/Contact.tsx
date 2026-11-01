@@ -9,10 +9,35 @@ import { contactFormSchema, type ContactFormData, submitContactMessage } from "@
 import { Mail, MapPin, Phone, Send, CheckCircle2, Map } from "lucide-react";
 import { toast } from "sonner";
 
-export function Contact() {
+interface ContactProps {
+  org?: {
+    nameEn?: string;
+    nameHi?: string;
+    email?: string;
+    phone?: string;
+    address?: string;
+  };
+  siteSettings?: {
+    email?: string;
+    donationEmail?: string;
+    phone?: string;
+    whatsappNumber?: string;
+    mapEmbedUrl?: string;
+    siteNameHi?: string;
+  };
+}
+
+export function Contact({ org, siteSettings }: ContactProps = {}) {
   const [submitted, setSubmitted] = useState(false);
   const [loadMap, setLoadMap] = useState(false);
   const { contact, meta } = siteConfig;
+
+  const displayEmail = siteSettings?.email || org?.email || contact.email;
+  const displayDonationEmail = siteSettings?.donationEmail || contact.donationEmail || displayEmail;
+  const displayPhone = siteSettings?.phone || org?.phone || contact.phone;
+  const displayAddress = org?.address || `${contact.registeredAddress.line1}, ${contact.registeredAddress.city}, ${contact.registeredAddress.state} - ${contact.registeredAddress.pincode}`;
+  const displayMapEmbed = siteSettings?.mapEmbedUrl || contact.mapEmbedUrl;
+  const devanagariName = siteSettings?.siteNameHi || org?.nameHi || meta.devanagariName;
 
   const {
     register,
@@ -80,11 +105,7 @@ export function Contact() {
                       Registered Address
                     </span>
                     <p className="text-ink font-medium mt-0.5 leading-snug">
-                      {contact.registeredAddress.line1}
-                      {contact.registeredAddress.line2 && `, ${contact.registeredAddress.line2}`}
-                    </p>
-                    <p className="text-muted text-xs">
-                      {contact.registeredAddress.city}, {contact.registeredAddress.state} - {contact.registeredAddress.pincode}
+                      {displayAddress}
                     </p>
                   </div>
                 </div>
@@ -99,22 +120,24 @@ export function Contact() {
                       Email Communication
                     </span>
                     <a
-                      href={`mailto:${contact.email}`}
+                      href={`mailto:${displayEmail}`}
                       className="text-ink hover:text-maroon font-medium transition-colors block mt-0.5"
                     >
-                      {contact.email}
+                      {displayEmail}
                     </a>
-                    <a
-                      href={`mailto:${contact.donationEmail}`}
-                      className="text-xs text-muted hover:text-maroon transition-colors block"
-                    >
-                      Donations: {contact.donationEmail}
-                    </a>
+                    {displayDonationEmail && displayDonationEmail !== displayEmail && (
+                      <a
+                        href={`mailto:${displayDonationEmail}`}
+                        className="text-xs text-muted hover:text-maroon transition-colors block"
+                      >
+                        Donations: {displayDonationEmail}
+                      </a>
+                    )}
                   </div>
                 </div>
 
                 {/* Phone (if configured) */}
-                {contact.phone && (
+                {displayPhone && (
                   <div className="flex items-start gap-3.5">
                     <div className="w-9 h-9 rounded-xl bg-sand flex items-center justify-center shrink-0 border border-border">
                       <Phone className="w-4 h-4 text-banyan" />
@@ -124,10 +147,10 @@ export function Contact() {
                         Telephone
                       </span>
                       <a
-                        href={`tel:${contact.phone}`}
+                        href={`tel:${displayPhone}`}
                         className="text-ink hover:text-maroon font-medium transition-colors block mt-0.5"
                       >
-                        {contact.phone}
+                        {displayPhone}
                       </a>
                     </div>
                   </div>
@@ -137,7 +160,7 @@ export function Contact() {
               {/* Cultural Tagline */}
               <div className="pt-4 border-t border-border flex items-center justify-between">
                 <span className="font-devanagari text-xs text-maroon font-semibold">
-                  {meta.devanagariName}
+                  {devanagariName}
                 </span>
                 <span className="text-[11px] text-muted">
                   {meta.city}
@@ -146,11 +169,11 @@ export function Contact() {
             </div>
 
             {/* Privacy-Preserving Map Facade (click to load) */}
-            {contact.mapEmbedUrl && (
+            {displayMapEmbed && (
               <div className="rounded-2xl border border-border overflow-hidden bg-sand/30 aspect-[16/9] relative flex items-center justify-center">
                 {loadMap ? (
                   <iframe
-                    src={contact.mapEmbedUrl}
+                    src={displayMapEmbed}
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}

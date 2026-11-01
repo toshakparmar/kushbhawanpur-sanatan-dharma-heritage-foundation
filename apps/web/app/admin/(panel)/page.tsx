@@ -24,7 +24,7 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     adminFetch("/admin/dashboard")
       .then((data) => setStats(data))
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setLoading(false));
   }, []);
 
@@ -268,13 +268,12 @@ export default function AdminDashboardPage() {
                         </td>
                         <td className="py-2.5 px-3">
                           <span
-                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                              r.status === "VERIFIED"
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${r.status === "VERIFIED"
                                 ? "bg-green-100 text-green-800"
                                 : r.status === "PENDING_VERIFICATION"
-                                ? "bg-amber-100 text-amber-800"
-                                : "bg-gray-100 text-gray-800"
-                            }`}
+                                  ? "bg-amber-100 text-amber-800"
+                                  : "bg-gray-100 text-gray-800"
+                              }`}
                           >
                             {r.status}
                           </span>

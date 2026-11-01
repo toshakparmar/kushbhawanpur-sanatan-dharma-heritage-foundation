@@ -134,7 +134,9 @@ export function HomeClient({ siteData, donateConfig }: HomeClientProps) {
       {isEnabled("faq") && <Faq />}
 
       {/* 14. Contact & Office Details */}
-      {isEnabled("contact") && <Contact />}
+      {isEnabled("contact") && (
+        <Contact org={siteData.org} siteSettings={siteData.siteSettings} />
+      )}
     </div>
   );
 }

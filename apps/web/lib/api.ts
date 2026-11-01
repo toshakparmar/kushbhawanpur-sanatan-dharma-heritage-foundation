@@ -17,10 +17,16 @@ import {
 } from "@/content/defaults";
 import { QrMode } from "@kushbhawanpur/shared";
 
-const API_BASE =
-  process.env.INTERNAL_API_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  "http://localhost:4000/api/v1";
+function getApiBase(): string {
+  const raw =
+    process.env.INTERNAL_API_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
+    "http://localhost:4000/api/v1";
+  const trimmed = raw.replace(/\/+$/, "");
+  return trimmed.endsWith("/api/v1") ? trimmed : `${trimmed}/api/v1`;
+}
+
+const API_BASE = getApiBase();
 
 export interface SiteData {
   siteSettings?: any;
@@ -148,7 +154,7 @@ export interface DonateConfig {
 export async function getSiteData(): Promise<SiteData> {
   try {
     const res = await fetch(`${API_BASE}/public/site`, {
-      next: { revalidate: 60 },
+      cache: "no-store",
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     const json = await res.json();
@@ -240,7 +246,7 @@ export async function getSiteData(): Promise<SiteData> {
 export async function getDonateConfig(): Promise<DonateConfig> {
   try {
     const res = await fetch(`${API_BASE}/public/donate-config`, {
-      next: { revalidate: 60 },
+      cache: "no-store",
     });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     const json = await res.json();
