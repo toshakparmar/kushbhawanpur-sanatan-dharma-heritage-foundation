@@ -47,7 +47,7 @@ export async function createDonationIntent(
   // Client-side static generation of unique transaction intent reference
   const randomSuffix = Math.random().toString(36).substring(2, 7).toUpperCase();
   const intentId = `KSD-${Date.now().toString().slice(-6)}-${randomSuffix}`;
-  
+
   const purposeShort = input.purposeTitle.split(" ")[0].substring(0, 10);
   const referenceNote = `${purposeShort} Seva ${intentId}`;
 
